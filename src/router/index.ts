@@ -26,22 +26,22 @@ const router = createRouter({
         {
           path: '',
           name: 'overview',
-          component: () => import('@/components/Overview.vue')
+          component: () => import('@/views/Overview.vue')
         },
         {
           path: 'room_configuration',
           name: 'room_configuration',
-          component: () => import('@/components/RoomConf.vue')
+          component: () => import('@/views/RoomConf.vue')
         },
         {
           path: 'system_settings',
           name: 'system_settings',
-          component: () => import('@/components/SystemSettings.vue')
+          component: () => import('@/views/SystemSettings.vue')
         },
         {
           path: 'file_management',
           name: 'file_management',
-          component: () => import('@/components/FileManagement.vue')
+          component: () => import('@/views/FileManagement.vue')
         }
       ]
     },
