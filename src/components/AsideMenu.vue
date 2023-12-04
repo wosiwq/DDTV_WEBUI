@@ -35,7 +35,7 @@ const { width } = useWindowSize()
 const isCollapse = ref(false)
 
 watch(width, (newWidth) => {
-  isCollapse.value = newWidth < 768
+  isCollapse.value = newWidth < 992
 })
 const collapseIcon = [Outdent, Indent]
 const menuItemList = [

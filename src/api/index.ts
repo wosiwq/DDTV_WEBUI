@@ -192,8 +192,8 @@ export function getRoomSummaryInfo() {
 }
 
 // 增一个加房间配置
-export function roomAdd(data: { roomId: number }) {
-  return instance.post('Room_Add', data)
+export function roomAdd(UID: number) {
+  return instance.post('Room_Add', { UID: UID })
 }
 
 // 删除一个房间配置

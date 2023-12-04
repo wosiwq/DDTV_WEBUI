@@ -1,7 +1,5 @@
 <template>
-  <div>room</div>
+  <RoomInfo></RoomInfo>
 </template>
-<script lang="ts" setup>
-import { reactive, ref } from 'vue'
-</script>
+<script lang="ts" setup></script>
 <style scoped></style>
