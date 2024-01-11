@@ -1,91 +1,52 @@
 <template>
-  <div style="height: 100%" v-loading="!store.is_ready()">
-    <div v-if="store.is_ready()">
-      <ElRow :gutter="20">
-        <ElCol :sm="6">
-          <ElCard shadow="hover">
-            <template #header>平台</template>
-            {{ store.system_resoures_data?.Platform }}
-          </ElCard>
-        </ElCol>
-        <ElCol :sm="6">
-          <ElCard shadow="hover">
-            <template #header>CPU使用率</template>
-            {{ store.system_resoures_data?.CPU_usage + '%' }}
-          </ElCard>
-        </ElCol>
-        <ElCol :sm="6">
-          <ElCard shadow="hover">
-            <template #header>内存使用情况</template>
-            {{
-              convertBytesToMiBOrGiB(store.memory_info!.Available) +
-              '/' +
-              convertBytesToMiBOrGiB(store.memory_info!.Total)
-            }}
-          </ElCard>
-        </ElCol>
-        <ElCol :sm="6">
-          <ElCard shadow="hover">
-            <template #header>内存使用率</template>
-            {{ ((store.memory_info!.Available / store.memory_info!.Total) * 100).toFixed(2) + '%' }}
-          </ElCard>
-        </ElCol>
-      </ElRow>
-      <ElCard style="margin-top: 10px" shadow="hover">
-        <template #header>硬盘使用情况</template>
-        <ElCard shadow="hover" v-for="(item, index) in store.hdd_infos" :key="index">
-          <template #header>
-            {{
-              '文件系统：' +
-              item.FileSystem +
-              '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;挂载路径' +
-              item.MountPath
-            }}
-          </template>
-          <ElRow :gutter="20">
-            <ElCol :sm="6">
-              <ElCard shadow="hover">
-                <template #header>硬盘大小</template>
-                {{ item.Size }}
-              </ElCard>
-            </ElCol>
-
-            <ElCol :sm="6">
-              <ElCard shadow="hover">
-                <template #header>硬盘空闲空间</template>
-                {{ item.Avail }}
-              </ElCard>
-            </ElCol>
-            <ElCol :sm="6">
-              <ElCard shadow="hover">
-                <template #header>硬盘使用空间</template>
-                {{ item.Usage }}
-              </ElCard>
-            </ElCol>
-            <ElCol :sm="6">
-              <ElCard shadow="hover">
-                <template #header>硬盘使用率</template>
-                {{ item.Used }}
-              </ElCard>
-            </ElCol>
-          </ElRow>
-        </ElCard>
+  <meta name="referrer" content="no-referrer" />
+  <ElScrollbar>
+    <div v-if="RoomInfoList.length > 0" class="grid card-div h-full">
+      <ElCard
+        shadow="hover"
+        class="cursor-pointer hover:scale-105 transition-all"
+        v-for="(item, index) in RoomInfoList"
+        :key="index"
+        style="--el-card-padding: 0; width: 400px">
+        <ElImage
+          fit="cover"
+          :src="item.roomInfo.CoverFromUser"
+          loading="lazy"
+          style="width: 400px; height: 225px"></ElImage>
+        <div class="m-2">
+          <div class="flex">
+            <ElAvatar :src="item.roomInfo.Face"></ElAvatar>
+            <div class="flex flex-col ml-2">
+              <!-- <ElText>{{ item.userInfo.Name }}</ElText> -->
+              <!-- <ElText>{{ '房间号：' + item.roomInfo.RoomId }}</ElText> -->
+              <span>{{ item.userInfo.Name }}</span>
+              <span>{{ '房间号：' + item.roomInfo.RoomId }}</span>
+            </div>
+          </div>
+          <div></div>
+        </div>
       </ElCard>
     </div>
-  </div>
+  </ElScrollbar>
 </template>
 <script lang="ts" setup>
-import { useSystemResourcesStore } from '@/stores/systemResources'
-
-const store = useSystemResourcesStore()
-
-const convertBytesToMiBOrGiB = (bytes: number) => {
-  const mib = bytes / 1024 / 1024
-  const gib = mib / 1024
-  if (gib < 1) {
-    return mib.toFixed(2) + 'MB'
-  }
-  return gib.toFixed(2) + 'GB'
-}
+import { getDetailedRoomInfo } from '@/api'
+import type { BasicInfoListItem } from '@/types/response'
+const RoomInfoList = ref<BasicInfoListItem[]>([])
+const data = { quantity: 0, page: 1 }
+getDetailedRoomInfo(data).then((res) => {
+  RoomInfoList.value = res.data.data.basicInfolist
+  console.log(RoomInfoList.value)
+})
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.card-div {
+  padding: 12px;
+  display: grid;
+  max-width: 100%;
+  grid-template-columns: repeat(auto-fill, 400px);
+  grid-gap: 12px;
+  gap: 12px;
+  justify-content: center;
+}
+</style>

@@ -1,6 +1,5 @@
+import { getExample } from '@/api'
 import { createRouter, createWebHistory } from 'vue-router'
-import { Code } from '@/enums'
-import { getBiliAccountLoginState } from '@/api'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,17 +9,13 @@ const router = createRouter({
       name: 'home',
       component: () => import('../views/BaseViews.vue'),
       beforeEnter: (to, from, next) => {
-        getBiliAccountLoginState().then((res) => {
-          console.log(res.data)
-          if (
-            res.data.code === Code.LoginInfoFailure ||
-            res.data.code === Code.LoginVerificationFailed
-          ) {
-            next('/login')
-          } else {
+        getExample(1, 2)
+          .then(() => {
             next()
-          }
-        })
+          })
+          .catch(() => {
+            next('/login')
+          })
       },
       children: [
         {
@@ -50,14 +45,13 @@ const router = createRouter({
       name: 'login',
       component: () => import('../views/Login.vue'),
       beforeEnter: (to, from, next) => {
-        getBiliAccountLoginState().then((res) => {
-          console.log(res.data)
-          if (res.data.code === Code.Success) {
+        getExample(1, 2)
+          .then(() => {
             next('/')
-          } else {
+          })
+          .catch(() => {
             next()
-          }
-        })
+          })
       }
     }
   ]

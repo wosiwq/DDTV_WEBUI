@@ -27,15 +27,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { Home, Edit, Settings, Folder, Indent, Outdent } from '@/assets/icons'
+import { Edit, Folder, Home, Indent, Outdent, Settings } from '@/assets/icons'
 import { useWindowSize } from '@vueuse/core'
+import { ref } from 'vue'
 const { width } = useWindowSize()
 
 const isCollapse = ref(false)
 
 watch(width, (newWidth) => {
-  isCollapse.value = newWidth < 992
+  isCollapse.value = newWidth < 1040
 })
 const collapseIcon = [Outdent, Indent]
 const menuItemList = [

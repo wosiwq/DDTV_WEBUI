@@ -5,8 +5,8 @@
       <ElText>登陆以继续</ElText>
       <ElForm class="login-form">
         <ElFormItem class="login-form-item">
-          <ElInput @blur="onInput" label="用户名" class="login-input" v-model="form.username" />
-          <label>用户名</label>
+          <ElInput @blur="onInput" class="login-input" v-model="form.AccessKeyId" />
+          <label>AccessKeyId</label>
         </ElFormItem>
         <ElFormItem class="login-form-item">
           <ElInput
@@ -14,8 +14,8 @@
             class="login-input"
             type="password"
             show-password
-            v-model="form.password" />
-          <label>密码</label>
+            v-model="form.AccessKeySecret" />
+          <label>AccessKeySecret</label>
         </ElFormItem>
         <ElFormItem>
           <ElButton style="width: 100%" type="primary" @click="login">登录</ElButton>
@@ -25,30 +25,31 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { getBiliAccountLoginState, webUILogin } from '@/api'
-import { LoginStatus } from '@/enums'
+import { getExample } from '@/api'
 import router from '@/router'
 
 const form = reactive({
-  username: '',
-  password: ''
+  AccessKeyId: '',
+  AccessKeySecret: ''
 })
 
 const login = () => {
-  if (!form.username || !form.password) {
-    ElMessage.error('用户名或密码不能为空')
+  if (!form.AccessKeyId || !form.AccessKeySecret) {
+    ElMessage.error('AccessKeyId或AccessKeySecret不能为空')
     return
   }
-  webUILogin(form).then((res) => {
-    if (res.data.code === 6001) {
-      ElMessage.error('用户名或密码错误')
-    } else if (res.data.code !== 0) {
-      ElMessage.error('未知错误,请检查后端服务是否正常')
-    } else {
-      ElMessage.success('登录成功!')
+  localStorage.setItem('AccessKeyId', form.AccessKeyId)
+  localStorage.setItem('AccessKeySecret', form.AccessKeySecret)
+  getExample(1, 2)
+    .then(() => {
+      ElMessage.success('校验成功')
       router.push('/')
-    }
-  })
+    })
+    .catch(() => {
+      ElMessage.error('校验失败，请确认参数填写的与DDTV_Config.ini内的一致')
+      localStorage.removeItem('AccessKeyId')
+      localStorage.removeItem('AccessKeySecret')
+    })
 }
 const onInput = (event: FocusEvent) => {
   const elInput = event.target as HTMLInputElement
@@ -63,11 +64,11 @@ const onInput = (event: FocusEvent) => {
 }
 
 onBeforeMount(() => {
-  getBiliAccountLoginState().then((res) => {
-    if (res.data.data.LoginState === LoginStatus.LoggedIn) {
+  getExample(1, 2)
+    .then(() => {
       router.push('/')
-    }
-  })
+    })
+    .catch()
 })
 </script>
 <style scoped lang="scss">
