@@ -15,10 +15,8 @@
           style="width: 400px; height: 225px"></ElImage>
         <div class="m-2">
           <div class="flex">
-            <ElAvatar :src="item.roomInfo.Face"></ElAvatar>
-            <div class="flex flex-col ml-2">
-              <!-- <ElText>{{ item.userInfo.Name }}</ElText> -->
-              <!-- <ElText>{{ '房间号：' + item.roomInfo.RoomId }}</ElText> -->
+            <ElAvatar :size="52" :src="item.roomInfo.Face"></ElAvatar>
+            <div class="flex flex-col ml-2 justify-between">
               <span>{{ item.userInfo.Name }}</span>
               <span>{{ '房间号：' + item.roomInfo.RoomId }}</span>
             </div>
