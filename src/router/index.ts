@@ -9,6 +9,11 @@ const router = createRouter({
       name: 'home',
       component: () => import('../views/BaseViews.vue'),
       beforeEnter: (to, from, next) => {
+        const AccessKeyId = localStorage.getItem('AccessKeyId')
+        const AccessKeySecret = localStorage.getItem('AccessKeySecret')
+        if (!AccessKeyId || !AccessKeySecret) {
+          next('/login')
+        }
         getDokidoki()
           .then(() => {
             next()
@@ -45,6 +50,11 @@ const router = createRouter({
       name: 'login',
       component: () => import('../views/Login.vue'),
       beforeEnter: (to, from, next) => {
+        const AccessKeyId = localStorage.getItem('AccessKeyId')
+        const AccessKeySecret = localStorage.getItem('AccessKeySecret')
+        if (!AccessKeyId || !AccessKeySecret) {
+          next()
+        }
         getDokidoki()
           .then(() => {
             next('/')

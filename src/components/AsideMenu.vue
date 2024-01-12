@@ -40,9 +40,9 @@ watch(width, (newWidth) => {
 const collapseIcon = [Outdent, Indent]
 const menuItemList = [
   { index: '/', title: '概览', icon: Home },
-  { index: '/room_configuration', title: '房间配置', icon: Edit },
-  { index: '/system_settings', title: '系统设置', icon: Settings },
-  { index: '/file_management', title: '文件管理', icon: Folder }
+  { index: 'room_configuration', title: '房间配置', icon: Edit },
+  { index: 'system_settings', title: '系统设置', icon: Settings },
+  { index: 'file_management', title: '文件管理', icon: Folder }
 ]
 </script>
 
