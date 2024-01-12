@@ -1,4 +1,4 @@
-import { getExample } from '@/api'
+import { getDokidoki } from '@/api'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -9,7 +9,7 @@ const router = createRouter({
       name: 'home',
       component: () => import('../views/BaseViews.vue'),
       beforeEnter: (to, from, next) => {
-        getExample(1, 2)
+        getDokidoki()
           .then(() => {
             next()
           })
@@ -45,7 +45,7 @@ const router = createRouter({
       name: 'login',
       component: () => import('../views/Login.vue'),
       beforeEnter: (to, from, next) => {
-        getExample(1, 2)
+        getDokidoki()
           .then(() => {
             next('/')
           })

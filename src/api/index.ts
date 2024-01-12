@@ -1,6 +1,6 @@
 // 导入axios
 import type { Response } from '@/types'
-import type { detailedRoomInfoData } from '@/types/response'
+import type { completeRoomInfoData } from '@/types/response'
 import axios from 'axios'
 import SHA1 from 'crypto-js/sha1'
 
@@ -25,11 +25,11 @@ instance.interceptors.request.use(
 
       params = {
         ...params,
-        accesskeyid: accessKeyid,
+        access_key_id: accessKeyid,
         time: Math.floor(Date.now() / 1000)
       }
       const origin_params = { ...params }
-      origin_params['accesskeysecret'] = accessKeySecret
+      origin_params['access_key_secret'] = accessKeySecret
       const sortedParams = Object.keys(origin_params)
         .sort()
         .map((key) => `${key.toLowerCase()}=${origin_params[key]}`)
@@ -72,22 +72,20 @@ instance.interceptors.response.use(
   }
 )
 
-export function getExample(a: number, b: number) {
-  return instance.get<Response<any>>('Example/Example', {
-    params: {
-      a: a,
-      b: b
-    }
-  })
+export function getDokidoki() {
+  return instance.get<Response<any>>('dokidoki', {})
 }
 
-export function postExample(data: { a: number; b: number }) {
-  return instance.post<Response<any>>('Example/Example', data)
+export function postDokidoki() {
+  return instance.post<Response<any>>('dokidoki')
 }
 
 export function getDetailedRoomInfo(data: { quantity: number; page: number }) {
-  return instance.post<Response<detailedRoomInfoData>>('get_rooms/AllCompleteRoomInformation', data)
+  return instance.post<Response<completeRoomInfoData>>(
+    'get_rooms/all_complete_room_information',
+    data
+  )
 }
 export function getBasicRoomInfo(data: { quantity: number; page: number }) {
-  return instance.post<Response<any>>('get_rooms/AllBasicRoomInformation', data)
+  return instance.post<Response<any>>('get_rooms/all_basic_room_information', data)
 }

@@ -10,15 +10,15 @@
         style="--el-card-padding: 0; width: 400px">
         <ElImage
           fit="cover"
-          :src="item.roomInfo.CoverFromUser"
+          :src="item.roomInfo.coverFromUser + '@425w_237h_1c_1s.webp'"
           loading="lazy"
           style="width: 400px; height: 225px"></ElImage>
         <div class="m-2">
           <div class="flex">
-            <ElAvatar :size="52" :src="item.roomInfo.Face"></ElAvatar>
+            <ElAvatar :size="52" :src="item.roomInfo.face + '@60w_60h_1c_1s.webp'"></ElAvatar>
             <div class="flex flex-col ml-2 justify-between">
-              <span>{{ item.userInfo.Name }}</span>
-              <span>{{ '房间号：' + item.roomInfo.RoomId }}</span>
+              <span>{{ item.userInfo.name }}</span>
+              <span>{{ '房间号：' + item.roomInfo.roomId }}</span>
             </div>
           </div>
           <div></div>
@@ -29,11 +29,11 @@
 </template>
 <script lang="ts" setup>
 import { getDetailedRoomInfo } from '@/api'
-import type { BasicInfoListItem } from '@/types/response'
-const RoomInfoList = ref<BasicInfoListItem[]>([])
+import type { CompleteInfoListItem } from '@/types/response'
+const RoomInfoList = ref<CompleteInfoListItem[]>([])
 const data = { quantity: 0, page: 1 }
 getDetailedRoomInfo(data).then((res) => {
-  RoomInfoList.value = res.data.data.basicInfolist
+  RoomInfoList.value = res.data.data.completeInfoList
   console.log(RoomInfoList.value)
 })
 </script>

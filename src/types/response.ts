@@ -1,51 +1,52 @@
 export interface Response<T> {
   code: number
+  cmd: string
   massage: string
   data: T
 }
 
-export interface UserInfo {
-  Name: string
-  Description: string
-  UID: number
-  IsAutoRec: boolean
-  IsRemind: boolean
-  IsRecDanmu: boolean
-  Sex: string
-  Sign: string
+export interface completeRoomInfoData {
+  total: number
+  completeInfoList: CompleteInfoListItem[]
 }
 
-export interface RoomInfo {
-  RoomId: number
-  Title: string
-  Attention: number
-  LiveTime: number
-  LiveStatus: boolean
-  ShortId: number
-  AreaName: string
-  Face: string
-  tags: string // Note: field names in TypeScript are case-sensitive
-  CoverFromUser: string
-  KeyFrame: string
-  Url: string
-}
-
-export interface TaskStatus {
-  IsDownload: boolean
-  DownloadSize: number
-  Status: number
-  StartTime: string
-  EndTime: string
-  Title: string
-}
-
-export interface BasicInfoListItem {
+export interface CompleteInfoListItem {
   userInfo: UserInfo
   roomInfo: RoomInfo
   taskStatus: TaskStatus
 }
 
-export interface detailedRoomInfoData {
-  Total: number
-  basicInfolist: BasicInfoListItem[]
+export interface UserInfo {
+  name: string
+  description: string
+  uid: number
+  isAutoRec: boolean
+  isRemind: boolean
+  isRecDanmu: boolean
+  sex: string
+  sign: string
+}
+
+export interface RoomInfo {
+  roomId: number
+  title: string
+  attention: number
+  liveTime: number
+  liveStatus: boolean
+  shortId: number
+  areaName: string
+  face: string
+  tags: string
+  coverFromUser: string
+  keyFrame: string
+  url: string
+}
+
+export interface TaskStatus {
+  isDownload: boolean
+  downloadSize: number
+  status: number
+  startTime: string
+  endTime: string
+  title: string
 }
