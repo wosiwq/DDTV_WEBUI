@@ -1,3 +1,4 @@
+import '@/api/instance'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import { createPinia } from 'pinia'
 import 'virtual:uno.css'

@@ -1,15 +1,20 @@
-import { getExample } from '@/api'
-import { createRouter, createWebHistory } from 'vue-router'
+import { getDokidoki } from '@/api'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
       name: 'home',
       component: () => import('../views/BaseViews.vue'),
       beforeEnter: (to, from, next) => {
-        getExample(1, 2)
+        const AccessKeyId = localStorage.getItem('AccessKeyId')
+        const AccessKeySecret = localStorage.getItem('AccessKeySecret')
+        if (!AccessKeyId || !AccessKeySecret) {
+          next('/login')
+        }
+        getDokidoki()
           .then(() => {
             next()
           })
@@ -45,7 +50,12 @@ const router = createRouter({
       name: 'login',
       component: () => import('../views/Login.vue'),
       beforeEnter: (to, from, next) => {
-        getExample(1, 2)
+        const AccessKeyId = localStorage.getItem('AccessKeyId')
+        const AccessKeySecret = localStorage.getItem('AccessKeySecret')
+        if (!AccessKeyId || !AccessKeySecret) {
+          next()
+        }
+        getDokidoki()
           .then(() => {
             next('/')
           })

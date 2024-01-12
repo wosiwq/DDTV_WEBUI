@@ -8,19 +8,19 @@
     </ElMain>
   </ElContainer>
 
-  <!-- <ElDialog -->
-  <!-- title="DDTV的所有功能均依赖于B站的cookie,当前仅支持使用B站扫码登陆后使用" -->
-  <!-- :close-on-click-modal="false" -->
-  <!-- :close-on-press-escape="false" -->
-  <!-- :show-close="false" -->
-  <!-- width="auto" -->
-  <!-- align-center -->
-  <!-- center -->
-  <!-- v-model="dialogVisible"> -->
-  <!-- <div class="bili-login-qrcode-div"> -->
-  <!-- <ElImage :src="imageUrl" style="margin: auto"></ElImage> -->
-  <!-- </div> -->
-  <!-- </ElDialog> -->
+  <ElDialog
+    title="DDTV的所有功能均依赖于B站的cookie,当前仅支持使用B站扫码登陆后使用"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :show-close="false"
+    width="auto"
+    center
+    align-center
+    v-model="dialogVisible">
+    <div class="bili-login-qrcode-div">
+      <ElImage :src="imageUrl" style="margin: auto"></ElImage>
+    </div>
+  </ElDialog>
 </template>
 <script lang="ts" setup>
 import AsideMenu from '@/components/AsideMenu.vue'
@@ -29,8 +29,8 @@ import AsideMenu from '@/components/AsideMenu.vue'
 // import { useSystemResourcesStore } from '@/stores/systemResources'
 
 // const store = useSystemResourcesStore()
-// const dialogVisible = ref(false)
-// const imageUrl = ref('')
+const dialogVisible = ref(false)
+const imageUrl = ref('')
 
 // const update_store = async () => {
 //   getSystemResources().then((response) => {

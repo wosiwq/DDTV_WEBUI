@@ -25,7 +25,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { getExample } from '@/api'
+import { getDokidoki } from '@/api'
 import router from '@/router'
 
 const form = reactive({
@@ -40,7 +40,7 @@ const login = () => {
   }
   localStorage.setItem('AccessKeyId', form.AccessKeyId)
   localStorage.setItem('AccessKeySecret', form.AccessKeySecret)
-  getExample(1, 2)
+  getDokidoki()
     .then(() => {
       ElMessage.success('校验成功')
       router.push('/')
@@ -64,7 +64,7 @@ const onInput = (event: FocusEvent) => {
 }
 
 onBeforeMount(() => {
-  getExample(1, 2)
+  getDokidoki()
     .then(() => {
       router.push('/')
     })
