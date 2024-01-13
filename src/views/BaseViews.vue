@@ -24,45 +24,70 @@
 </template>
 <script lang="ts" setup>
 import AsideMenu from '@/components/AsideMenu.vue'
+import { getLoginStatus } from '@/api/login'
 // import { LoginStatus } from '@/enums'
 // import router from '@/router'
 const dialogVisible = ref(false)
 const imageUrl = ref('')
 
-// import { getLoginQrcode, doReLogin } from '@/api/login'
-// import { getDokidoki } from '@/api'
-// let timer: ReturnType<typeof setInterval> | undefined = undefined
-// const MAX_TIME = 180 // 3分钟
-// let timeElapsed = 0
-// const checkLoginState = async () => {
-// }
-// onMounted(() => {
-//   getDokidoki().then((res) => {
-//     if (res.data.code === 6000) {
-//       dialogVisible.value = true
-//       doReLogin()
-//         .then(() => {
-//           return getLoginQrcode()
-//         })
-//         .then((res) => {
-//           return blobToBase64(res.data)
-//         })
-//         .then((res) => {
-//           imageUrl.value = res as string
-//         })
-//     }
-//   })
-// })
+import { getLoginQrcode, doReLogin } from '@/api/login'
+import { getDokidoki } from '@/api'
+let timer: ReturnType<typeof setInterval> | undefined = undefined
+const MAX_TIME = 180 // 3分钟
+let timeElapsed = 0
+const checkLoginState = async () => {
+  const res = await getLoginStatus()
+  console.log(res)
 
-// const blobToBase64 = (blob: Blob) => {
-//   return new Promise((resolve) => {
-//     const reader = new FileReader()
-//     reader.onload = (e) => {
-//       resolve(e.target?.result)
-//     }
-//     reader.readAsDataURL(blob)
-//   })
-// }
+  // if (res.data.data.LoginState === LoginStatus.LoggedIn) {
+  //   clearInterval(timer)
+  //   timer = undefined
+  //   ElMessage.success('登录成功!')
+  //   dialogVisible.value = false
+  //   router.go(0)
+  // } else {
+  //   timeElapsed++
+  //   if (timeElapsed >= MAX_TIME) {
+  //     getBiliLoginQr().then((res) => {
+  //       imageUrl.value = URL.createObjectURL(new Blob([res.data], { type: 'image/png' }))
+  //     })
+  //     timeElapsed = 0
+  //   }
+  // }
+}
+onMounted(() => {
+  getDokidoki().then((res) => {
+    if (res.data.code === 6000) {
+      doReLogin()
+        .then(() => {
+          return getLoginQrcode()
+        })
+        .then((res) => {
+          return blobToBase64(res.data)
+        })
+        .then((res) => {
+          imageUrl.value = res as string
+          timer = setInterval(checkLoginState, 1000)
+          dialogVisible.value = true
+        })
+    }
+  })
+})
+onUnmounted(() => {
+  if (timer) {
+    clearInterval(timer)
+  }
+})
+
+const blobToBase64 = (blob: Blob) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      resolve(e.target?.result)
+    }
+    reader.readAsDataURL(blob)
+  })
+}
 </script>
 <style scoped lang="scss">
 .bili-login-qrcode-div {

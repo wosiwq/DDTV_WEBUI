@@ -1,8 +1,11 @@
 import type { Response } from '@/types'
 import { instance } from './instance'
 
+export function getLoginStatus() {
+  return instance.post<Response<any>>('login/get_login_status')
+}
 export function getLoginQrcode() {
-  return instance.post<Blob>('login/get_login_qr', null, {
+  return instance.get<Blob>('login/get_login_qr', {
     responseType: 'blob'
   })
 }

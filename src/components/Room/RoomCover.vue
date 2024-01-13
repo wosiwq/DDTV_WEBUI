@@ -6,7 +6,7 @@
       <span class="text-lg">{{ roomInfo.title }}</span>
     </div>
     <div
-      class="absolute bottom-0 left-0 z-1 h-[40px] w-full flex items-end pl-2"
+      class="absolute bottom-0 left-0 z-1 h-[40px] w-full flex items-end pb-[0.125rem] pl-2"
       style="
         background-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.38) 100%);
       ">

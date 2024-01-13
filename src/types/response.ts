@@ -19,7 +19,7 @@ export interface CompleteInfoListItem {
 export interface UserInfo {
   name: string
   description: string
-  uid: number
+  uid: bigint
   isAutoRec: boolean
   isRemind: boolean
   isRecDanmu: boolean

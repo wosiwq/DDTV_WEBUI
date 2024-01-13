@@ -4,7 +4,7 @@
     <ElScrollbar>
       <div class="card-div grid h-full">
         <div
-          class="relative w-[400px] cursor-pointer overflow-hidden border b-light-200 rd transition-all hover:scale-105 dark:b-dark-200 hover:shadow"
+          class="relative w-[400px] overflow-hidden border b-light-200 rd transition-all hover:scale-105 dark:b-dark-200"
           v-for="(item, index) in RoomInfoList"
           :key="index">
           <RoomCover :room-info="item.roomInfo"></RoomCover>
@@ -13,7 +13,7 @@
               :is-download="item.taskStatus.isDownload"
               :user-info="item.userInfo"
               :room-info="item.roomInfo"></RoomUser>
-            <RoomAction></RoomAction>
+            <RoomAction :user-info="item.userInfo"></RoomAction>
           </div>
         </div>
       </div>
