@@ -37,23 +37,24 @@ const MAX_TIME = 180 // 3分钟
 let timeElapsed = 0
 const checkLoginState = async () => {
   const res = await getLoginStatus()
-  console.log(res)
-
-  // if (res.data.data.LoginState === LoginStatus.LoggedIn) {
-  //   clearInterval(timer)
-  //   timer = undefined
-  //   ElMessage.success('登录成功!')
-  //   dialogVisible.value = false
-  //   router.go(0)
-  // } else {
-  //   timeElapsed++
-  //   if (timeElapsed >= MAX_TIME) {
-  //     getBiliLoginQr().then((res) => {
-  //       imageUrl.value = URL.createObjectURL(new Blob([res.data], { type: 'image/png' }))
-  //     })
-  //     timeElapsed = 0
-  //   }
-  // }
+  if (res) {
+    clearInterval(timer)
+    timer = undefined
+    ElMessage.success('登录成功!')
+    dialogVisible.value = false
+    return
+  }
+  timeElapsed++
+  if (timeElapsed >= MAX_TIME) {
+    getLoginQrcode()
+      .then((res) => {
+        return blobToBase64(res.data)
+      })
+      .then((res) => {
+        imageUrl.value = res as string
+      })
+    timeElapsed = 0
+  }
 }
 onMounted(() => {
   getDokidoki().then((res) => {
