@@ -26,8 +26,11 @@ declare module 'vue' {
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElText: typeof import('element-plus/es')['ElText']
     LiveStatus: typeof import('./src/components/LiveStatus.vue')['default']
-    RoomAction: typeof import('./src/components/RoomAction.vue')['default']
+    RoomAction: typeof import('./src/components/Room/RoomAction.vue')['default']
+    RoomCover: typeof import('./src/components/Room/RoomCover.vue')['default']
     RoomInfo: typeof import('./src/components/RoomInfo.vue')['default']
+    RoomStatus: typeof import('./src/components/Room/RoomStatus.vue')['default']
+    RoomUser: typeof import('./src/components/Room/RoomUser.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

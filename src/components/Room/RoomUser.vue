@@ -1,0 +1,45 @@
+<template>
+  <div class="flex justify-between p-2">
+    <div class="flex">
+      <ElAvatar
+        class="select-none"
+        :size="52"
+        :src="roomInfo.face ? roomInfo.face + '@52w_52h_1c_1s.webp' : undefined">
+        <img src="https://i0.hdslb.com/bfs/face/member/noface.jpg@52w_52h_1c_1s.webp" />
+      </ElAvatar>
+      <div class="m-1 ml-2 flex flex-col justify-between">
+        <span class="text-sm">{{ userInfo.name }}</span>
+        <div>
+          <span class="text-sm">房间号：</span>
+          <span class="text-sm hover:text-blue" @click="openBiliLiveRoom()">
+            {{ roomInfo.roomId }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <!-- 开播状态 -->
+    <RoomStatus :room-info="roomInfo" :is-download="isDownload"></RoomStatus>
+  </div>
+</template>
+<script lang="ts" setup>
+import RoomStatus from '@/components/Room/RoomStatus.vue'
+import type { RoomInfo, UserInfo } from '@/types/response'
+const props = defineProps({
+  roomInfo: {
+    type: Object as PropType<RoomInfo>,
+    default: () => ({})
+  },
+  userInfo: {
+    type: Object as PropType<UserInfo>,
+    default: () => ({})
+  },
+  isDownload: {
+    type: Boolean,
+    default: false
+  }
+})
+const openBiliLiveRoom = () => {
+  window.open(props.roomInfo.url)
+}
+</script>
+<style scoped lang="scss"></style>
