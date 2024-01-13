@@ -17,6 +17,9 @@ instance.interceptors.request.use(
 
     const accessKeyid = localStorage.getItem('AccessKeyId')
     const accessKeySecret = localStorage.getItem('AccessKeySecret')
+    if (config.url === 'login/get_login_qr') {
+      return config
+    }
 
     if (config.url) {
       params = {

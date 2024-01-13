@@ -26,61 +26,43 @@
 import AsideMenu from '@/components/AsideMenu.vue'
 // import { LoginStatus } from '@/enums'
 // import router from '@/router'
-// import { useSystemResourcesStore } from '@/stores/systemResources'
-
-// const store = useSystemResourcesStore()
 const dialogVisible = ref(false)
 const imageUrl = ref('')
 
-// const update_store = async () => {
-//   getSystemResources().then((response) => {
-//     store.update_handler(response.data.data)
-//   })
-// }
-
+// import { getLoginQrcode, doReLogin } from '@/api/login'
+// import { getDokidoki } from '@/api'
 // let timer: ReturnType<typeof setInterval> | undefined = undefined
 // const MAX_TIME = 180 // 3分钟
 // let timeElapsed = 0
 // const checkLoginState = async () => {
-//   const res = await getBiliAccountLoginState()
-//   if (res.data.data.LoginState === LoginStatus.LoggedIn) {
-//     clearInterval(timer)
-//     timer = undefined
-//     ElMessage.success('登录成功!')
-//     dialogVisible.value = false
-//     router.go(0)
-//   } else {
-//     timeElapsed++
-//     if (timeElapsed >= MAX_TIME) {
-//       getBiliLoginQr().then((res) => {
-//         imageUrl.value = URL.createObjectURL(new Blob([res.data], { type: 'image/png' }))
-//       })
-//       timeElapsed = 0
-//     }
-//   }
 // }
 // onMounted(() => {
-//   getBiliAccountLoginState().then((res) => {
-//     if (res.data.data.LoginState !== LoginStatus.LoggedIn) {
-//       biliLoginReset().then((res) => {
-//         console.log(res.data)
-//       })
-//       getBiliLoginQr().then((res) => {
-//         imageUrl.value = URL.createObjectURL(new Blob([res.data], { type: 'image/png' }))
-//       })
-//       timer = setInterval(checkLoginState, 1000)
+//   getDokidoki().then((res) => {
+//     if (res.data.code === 6000) {
 //       dialogVisible.value = true
-//     } else {
-//       update_store()
-//       timer = setInterval(update_store, 5000)
+//       doReLogin()
+//         .then(() => {
+//           return getLoginQrcode()
+//         })
+//         .then((res) => {
+//           return blobToBase64(res.data)
+//         })
+//         .then((res) => {
+//           imageUrl.value = res as string
+//         })
 //     }
 //   })
 // })
-// onUnmounted(() => {
-//   if (timer) {
-//     clearInterval(timer)
-//   }
-// })
+
+// const blobToBase64 = (blob: Blob) => {
+//   return new Promise((resolve) => {
+//     const reader = new FileReader()
+//     reader.onload = (e) => {
+//       resolve(e.target?.result)
+//     }
+//     reader.readAsDataURL(blob)
+//   })
+// }
 </script>
 <style scoped lang="scss">
 .bili-login-qrcode-div {

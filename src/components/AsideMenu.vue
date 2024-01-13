@@ -1,5 +1,5 @@
 <template>
-  <ElMenu router class="el-menu-vertical-demo" :collapse="isCollapse">
+  <ElMenu router class="el-menu-vertical-demo" :collapse="isCollapse" :collapse-transition="true">
     <ElMenuItem>
       <el-icon>
         <ElImage fit="contain" src="/DDTV.png" alt="DDTV logo" />
