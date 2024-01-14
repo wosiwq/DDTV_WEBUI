@@ -7,7 +7,7 @@
       :item-secondary-size="getCardWidth()"
       :buffer="400"
       class="h-full p-2"
-      key-field="userInfo">
+      key-field="uid">
       <template #default="{ item }">
         <div class="absolute border b-light-200 rd transition-all dark:b-dark-200">
           <RoomCover :room-info="item.roomInfo"></RoomCover>
@@ -25,14 +25,14 @@
 </template>
 <script lang="ts" setup>
 import { useWindowSize } from '@vueuse/core'
-import type { CompleteInfoListItem } from '@/types/response'
+import type { CompleteInfo } from '@/types/response'
 import RoomUser from '@/components/Room/RoomUser.vue'
 import RoomAction from '@/components/Room/RoomAction.vue'
 import RoomCover from '@/components/Room/RoomCover.vue'
 const { width, height } = useWindowSize()
 defineProps({
   roomInfoList: {
-    type: Object as PropType<CompleteInfoListItem[]>,
+    type: Object as PropType<CompleteInfo[]>,
     default: () => ({})
   }
 })

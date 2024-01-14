@@ -2,16 +2,19 @@
   <div class="flex justify-between p-2">
     <div class="flex">
       <ElAvatar
-        class="select-none"
+        class="cursor-pointer select-none"
         :size="52"
-        :src="roomInfo.face ? roomInfo.face + '@52w_52h_1c_1s.webp' : undefined">
+        :src="roomInfo.face ? roomInfo.face + '@52w_52h_1c_1s.webp' : undefined"
+        @click="openBiliHomepage()">
         <img src="https://i0.hdslb.com/bfs/face/member/noface.jpg@52w_52h_1c_1s.webp" />
       </ElAvatar>
       <div class="m-1 ml-2 flex flex-col justify-between">
-        <span class="text-sm">{{ userInfo.name }}</span>
+        <span class="cursor-pointer text-sm hover:text-blue" @click="openBiliHomepage()">
+          {{ userInfo.name }}
+        </span>
         <div>
           <span class="text-sm">房间号：</span>
-          <span class="text-sm hover:text-blue" @click="openBiliLiveRoom()">
+          <span class="cursor-pointer text-sm hover:text-blue" @click="openBiliLiveRoom()">
             {{ roomInfo.roomId }}
           </span>
         </div>
@@ -40,6 +43,9 @@ const props = defineProps({
 })
 const openBiliLiveRoom = () => {
   window.open(props.roomInfo.url)
+}
+const openBiliHomepage = () => {
+  window.open('https://space.bilibili.com/' + props.userInfo.uid)
 }
 </script>
 <style scoped lang="scss"></style>

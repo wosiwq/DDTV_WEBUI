@@ -7,10 +7,12 @@ export interface Response<T> {
 
 export interface CompleteRoomInfoData {
   total: number
-  completeInfoList: CompleteInfoListItem[]
+  completeInfoList: CompleteInfo[]
 }
 
-export interface CompleteInfoListItem {
+export interface CompleteInfo {
+  uid: bigint
+  roomId: number
   userInfo: UserInfo
   roomInfo: RoomInfo
   taskStatus: TaskStatus

@@ -15,10 +15,10 @@
 </template>
 <script lang="ts" setup>
 import { setRoomsRecordState } from '@/api/set_room'
-import type { CompleteInfoListItem } from '@/types/response'
+import type { CompleteInfo } from '@/types/response'
 const props = defineProps({
   items: {
-    type: Object as PropType<CompleteInfoListItem[]>,
+    type: Object as PropType<CompleteInfo[]>,
     default: () => ({})
   },
   updateFn: {

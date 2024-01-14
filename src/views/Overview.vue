@@ -18,16 +18,18 @@
 <script lang="ts" setup>
 import VirtualizedCard from '@/components/VirtualizedCard.vue'
 import { getDetailedRoomInfo } from '@/api/get_room'
-import type { CompleteInfoListItem } from '@/types/response'
+import type { CompleteInfo } from '@/types/response'
 import OverviewHeader from '@/components/OverviewHeader.vue'
-const rawRoomInfoList = ref<CompleteInfoListItem[]>([])
-const roomInfoList = ref<CompleteInfoListItem[]>([])
+const rawRoomInfoList = ref<CompleteInfo[]>([])
+const roomInfoList = ref<CompleteInfo[]>([])
 const isLoading = ref(true)
 const currentFilterState = ref(0)
 
 const getData = () => {
   isLoading.value = true
   getDetailedRoomInfo({ quantity: 0, page: 1 }).then((res) => {
+    console.log(res)
+
     rawRoomInfoList.value = res.data.data.completeInfoList
     roomInfoList.value = rawRoomInfoList.value
     isLoading.value = false
