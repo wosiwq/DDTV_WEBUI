@@ -8,8 +8,8 @@
         @click="openBiliHomepage()">
         <img src="https://i0.hdslb.com/bfs/face/member/noface.jpg@52w_52h_1c_1s.webp" />
       </ElAvatar>
-      <div class="m-1 ml-2 flex flex-col justify-between">
-        <span class="cursor-pointer text-sm hover:text-blue" @click="openBiliHomepage()">
+      <div class="m-1 ml-2 flex flex-col items-start justify-between">
+        <span class="w-auto cursor-pointer text-sm hover:text-blue" @click="openBiliHomepage()">
           {{ userInfo.name }}
         </span>
         <div>
