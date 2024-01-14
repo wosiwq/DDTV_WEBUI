@@ -1,36 +1,49 @@
 <template>
   <meta name="referrer" content="no-referrer" />
-  <div v-loading="RoomInfoList.length == 0" class="h-full">
-    <ElScrollbar>
-      <div class="card-div grid h-full">
-        <div
-          class="relative w-[400px] overflow-hidden border b-light-200 rd transition-all hover:scale-105 dark:b-dark-200"
-          v-for="(item, index) in RoomInfoList"
-          :key="index">
-          <RoomCover :room-info="item.roomInfo"></RoomCover>
-          <div class="divide-y-1 divide-light-200 dark:divide-dark-200">
-            <RoomUser
-              :is-download="item.taskStatus.isDownload"
-              :user-info="item.userInfo"
-              :room-info="item.roomInfo"></RoomUser>
-            <RoomAction :user-info="item.userInfo"></RoomAction>
-          </div>
-        </div>
-      </div>
-    </ElScrollbar>
+  <div v-loading="isLoading" class="h-full divide-y-1 divide-light-100 dark:divide-dark-100">
+    <OverviewHeader
+      :items="roomInfoList"
+      class="h-50px"
+      :update-fn="setDate"
+      :filter="filter"></OverviewHeader>
+    <div class="h-[calc(100%-50px)]">
+      <ElScrollbar>
+        <VirtualizedCard
+          :room-info-list="roomInfoList"
+          :current-filter-state="currentFilterState"></VirtualizedCard>
+      </ElScrollbar>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
-import RoomUser from '@/components/Room/RoomUser.vue'
-import RoomAction from '@/components/Room/RoomAction.vue'
-import RoomCover from '@/components/Room/RoomCover.vue'
+import VirtualizedCard from '@/components/VirtualizedCard.vue'
 import { getDetailedRoomInfo } from '@/api/get_room'
 import type { CompleteInfoListItem } from '@/types/response'
-const RoomInfoList = ref<CompleteInfoListItem[]>([])
-const data = { quantity: 0, page: 1 }
+import OverviewHeader from '@/components/OverviewHeader.vue'
+const roomInfoList = ref<CompleteInfoListItem[]>([])
+const isLoading = ref(true)
+const currentFilterState = ref(0)
 
-getDetailedRoomInfo(data).then((res) => {
-  RoomInfoList.value = res.data.data.completeInfoList
+const getData = () => {
+  isLoading.value = true
+  getDetailedRoomInfo({ quantity: 0, page: 1 }).then((res) => {
+    roomInfoList.value = res.data.data.completeInfoList
+    isLoading.value = false
+  })
+}
+const setDate = () => {
+  isLoading.value = true
+  getDetailedRoomInfo({ quantity: 0, page: 1 }).then((res) => {
+    roomInfoList.value = res.data.data.completeInfoList
+    isLoading.value = false
+  })
+}
+
+const filter = (state: number) => {
+  currentFilterState.value = state
+}
+onMounted(() => {
+  getData()
 })
 </script>
 <style scoped lang="scss">

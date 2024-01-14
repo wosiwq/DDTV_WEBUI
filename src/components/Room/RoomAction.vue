@@ -8,7 +8,7 @@
         inline-prompt
         active-text="已开启录制"
         inactive-text="已关闭录制"
-        v-model="isAutoRec"
+        v-model="localUserInfo.isAutoRec"
         :loading="loading"
         :before-change="beforeChange"></ElSwitch>
     </div>
@@ -18,19 +18,25 @@
 <script lang="ts" setup>
 import type { UserInfo } from '@/types/response'
 import { setRoomsRecordState } from '@/api/set_room'
+
 const props = defineProps({
   userInfo: {
     type: Object as PropType<UserInfo>,
     default: () => ({})
   }
 })
-const isAutoRec = ref(props.userInfo.isAutoRec)
+const { userInfo } = toRefs(props)
+const localUserInfo = ref({ ...userInfo.value })
+watch(userInfo, (newValue) => {
+  localUserInfo.value = { ...newValue }
+})
+
 const loading = ref(false)
 const beforeChange = async () => {
   loading.value = true
   const data = {
     uid: [props.userInfo.uid],
-    state: !isAutoRec
+    state: !props.userInfo.isAutoRec
   }
 
   try {

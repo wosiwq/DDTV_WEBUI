@@ -1,6 +1,6 @@
 <template>
   <div v-if="roomInfo.liveStatus" class="h-full flex flex-col items-end justify-start">
-    <div class="flex flex-col items-end justify-between">
+    <div class="flex justify-between">
       <div class="b-1 b-green-800 rd b-solid bg-green-200 pl-1 pr-1">
         <span class="text-sm text-green-800 line-height-[1.5rem]">直播中</span>
       </div>

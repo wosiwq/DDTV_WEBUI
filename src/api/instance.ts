@@ -40,7 +40,15 @@ instance.interceptors.request.use(
         config.params = params
       } else if (isPostMethod) {
         const formData = new FormData()
-        Object.keys(params).forEach((key) => formData.append(key, params[key]))
+        Object.keys(params).forEach((key) => {
+          if (Array.isArray(params[key])) {
+            params[key].forEach((item: any) => {
+              formData.append(key, item)
+            })
+          } else {
+            formData.append(key, params[key])
+          }
+        })
         config.data = formData
       }
     }

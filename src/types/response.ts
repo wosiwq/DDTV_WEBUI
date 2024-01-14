@@ -5,7 +5,7 @@ export interface Response<T> {
   data: T
 }
 
-export interface completeRoomInfoData {
+export interface CompleteRoomInfoData {
   total: number
   completeInfoList: CompleteInfoListItem[]
 }
