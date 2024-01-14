@@ -30,35 +30,12 @@ import RoomUser from '@/components/Room/RoomUser.vue'
 import RoomAction from '@/components/Room/RoomAction.vue'
 import RoomCover from '@/components/Room/RoomCover.vue'
 const { width, height } = useWindowSize()
-const props = defineProps({
+defineProps({
   roomInfoList: {
     type: Object as PropType<CompleteInfoListItem[]>,
     default: () => ({})
-  },
-  currentFilterState: {
-    type: Number,
-    default: 0
   }
 })
-const VCard = ref()
-const getShow = (item: CompleteInfoListItem) => {
-  if (props.currentFilterState === 0) {
-    return true
-  }
-  if (props.currentFilterState === 1) {
-    return item.roomInfo.liveStatus === false
-  }
-  if (props.currentFilterState === 2) {
-    return item.roomInfo.liveStatus === true
-  }
-  if (props.currentFilterState === 3) {
-    return item.roomInfo.liveStatus === true && item.taskStatus.isDownload === true
-  }
-  if (props.currentFilterState === 4) {
-    return item.roomInfo.liveStatus === true && item.taskStatus.isDownload === false
-  }
-}
-
 const getCardWidth = () => {
   if (width.value < 1040) {
     const cardWidth = (width.value - 64 - 16 - 20) / Math.floor((width.value - 100) / 400)

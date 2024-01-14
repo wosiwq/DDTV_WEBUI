@@ -20,6 +20,7 @@ import VirtualizedCard from '@/components/VirtualizedCard.vue'
 import { getDetailedRoomInfo } from '@/api/get_room'
 import type { CompleteInfoListItem } from '@/types/response'
 import OverviewHeader from '@/components/OverviewHeader.vue'
+const rawRoomInfoList = ref<CompleteInfoListItem[]>([])
 const roomInfoList = ref<CompleteInfoListItem[]>([])
 const isLoading = ref(true)
 const currentFilterState = ref(0)
@@ -27,7 +28,8 @@ const currentFilterState = ref(0)
 const getData = () => {
   isLoading.value = true
   getDetailedRoomInfo({ quantity: 0, page: 1 }).then((res) => {
-    roomInfoList.value = res.data.data.completeInfoList
+    rawRoomInfoList.value = res.data.data.completeInfoList
+    roomInfoList.value = rawRoomInfoList.value
     isLoading.value = false
   })
 }
@@ -41,6 +43,27 @@ const setDate = () => {
 
 const filter = (state: number) => {
   currentFilterState.value = state
+  switch (state) {
+    case 0:
+      roomInfoList.value = rawRoomInfoList.value
+      break
+    case 1:
+      roomInfoList.value = rawRoomInfoList.value.filter((item) => !item.roomInfo.liveStatus)
+      break
+    case 2:
+      roomInfoList.value = rawRoomInfoList.value.filter((item) => item.roomInfo.liveStatus)
+      break
+    case 3:
+      roomInfoList.value = rawRoomInfoList.value.filter(
+        (item) => item.taskStatus.isDownload && item.roomInfo.liveStatus
+      )
+      break
+    case 4:
+      roomInfoList.value = rawRoomInfoList.value.filter(
+        (item) => !item.taskStatus.isDownload && item.roomInfo.liveStatus
+      )
+      break
+  }
 }
 onMounted(() => {
   getData()
