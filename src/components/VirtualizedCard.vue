@@ -3,13 +3,13 @@
     <RecycleScroller
       :items="roomInfoList"
       :grid-items="getGridItems()"
-      :item-size="344"
+      :item-size="340"
       :item-secondary-size="getCardWidth()"
       :buffer="400"
       class="h-full p-2"
       key-field="uid">
       <template #default="{ item }">
-        <div class="absolute border b-light-200 rd transition-all dark:b-dark-200">
+        <div class="absolute ml-1 mt-1 border b-light-200 rd transition-all dark:b-dark-200">
           <RoomCover :room-info="item.roomInfo"></RoomCover>
           <div class="divide-y-1 divide-light-200 dark:divide-dark-200">
             <RoomUser

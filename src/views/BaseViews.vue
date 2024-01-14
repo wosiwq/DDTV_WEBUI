@@ -25,6 +25,7 @@
 <script lang="ts" setup>
 import AsideMenu from '@/components/AsideMenu.vue'
 import { getLoginStatus } from '@/api/login'
+import { Code } from '@/enums'
 // import { LoginStatus } from '@/enums'
 // import router from '@/router'
 const dialogVisible = ref(false)
@@ -58,7 +59,7 @@ const checkLoginState = async () => {
 }
 onMounted(() => {
   getDokidoki().then((res) => {
-    if (res.data.code === 6000) {
+    if (res.data.code === Code.LoginInfoFailure) {
       doReLogin()
         .then(() => {
           return getLoginQrcode()

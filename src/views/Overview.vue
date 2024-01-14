@@ -1,6 +1,13 @@
 <template>
   <meta name="referrer" content="no-referrer" />
-  <div v-loading="isLoading" class="h-full divide-y-1 divide-light-100 dark:divide-dark-100">
+  <div
+    v-loading="isLoading"
+    class="relative h-full divide-y-1 divide-light-100 dark:divide-dark-100">
+    <div
+      class="absolute bottom-20 right-30 z-1 rd-999px bg-white bg-clip-padding"
+      @click="showAddRoom = true">
+      <ElIcon :size="50" color="#60a5fa" style="vertical-align: -0.5rem"><Plus></Plus></ElIcon>
+    </div>
     <OverviewHeader
       :items="roomInfoList"
       class="h-50px"
@@ -14,8 +21,11 @@
       </ElScrollbar>
     </div>
   </div>
+  <ElDialog v-model="showAddRoom"></ElDialog>
 </template>
 <script lang="ts" setup>
+import { FilterState } from '@/enums'
+import Plus from '@/assets/icons/svg/plus-circle-fill.svg'
 import VirtualizedCard from '@/components/VirtualizedCard.vue'
 import { getDetailedRoomInfo } from '@/api/get_room'
 import type { CompleteInfo } from '@/types/response'
@@ -24,6 +34,7 @@ const rawRoomInfoList = ref<CompleteInfo[]>([])
 const roomInfoList = ref<CompleteInfo[]>([])
 const isLoading = ref(true)
 const currentFilterState = ref(0)
+const showAddRoom = ref(false)
 
 const getData = () => {
   isLoading.value = true
@@ -43,24 +54,24 @@ const setDate = () => {
   })
 }
 
-const filter = (state: number) => {
+const filter = (state: FilterState) => {
   currentFilterState.value = state
   switch (state) {
-    case 0:
+    case FilterState.All:
       roomInfoList.value = rawRoomInfoList.value
       break
-    case 1:
+    case FilterState.NotLive:
       roomInfoList.value = rawRoomInfoList.value.filter((item) => !item.roomInfo.liveStatus)
       break
-    case 2:
+    case FilterState.Live:
       roomInfoList.value = rawRoomInfoList.value.filter((item) => item.roomInfo.liveStatus)
       break
-    case 3:
+    case FilterState.LiveAndRecording:
       roomInfoList.value = rawRoomInfoList.value.filter(
         (item) => item.taskStatus.isDownload && item.roomInfo.liveStatus
       )
       break
-    case 4:
+    case FilterState.LiveButNotRecording:
       roomInfoList.value = rawRoomInfoList.value.filter(
         (item) => !item.taskStatus.isDownload && item.roomInfo.liveStatus
       )
@@ -82,3 +93,4 @@ onMounted(() => {
   justify-content: center;
 }
 </style>
+@/enums/filter_state
