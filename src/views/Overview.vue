@@ -4,7 +4,7 @@
     v-loading="isLoading"
     class="relative h-full divide-y-1 divide-light-100 dark:divide-dark-100">
     <div
-      class="absolute bottom-20 right-30 z-1 rd-999px bg-white bg-clip-padding"
+      class="absolute bottom-20 right-30 z-2 rd-999px bg-white bg-clip-padding"
       @click="showAddRoom = true">
       <ElIcon :size="50" color="#60a5fa" style="vertical-align: -0.5rem"><Plus></Plus></ElIcon>
     </div>
@@ -34,15 +34,9 @@ const isLoading = ref(true)
 const currentFilterState = ref(0)
 const showAddRoom = ref(false)
 
-const changeUrl = (index: number, base64: string) => {
-  roomInfoList.value[index].roomInfo.coverFromUser = base64
-}
-
 const getData = () => {
   isLoading.value = true
   getDetailedRoomInfo({ quantity: 0, page: 1 }).then((res) => {
-    console.log(res)
-
     rawRoomInfoList.value = res.data.data.completeInfoList
     roomInfoList.value = rawRoomInfoList.value
     isLoading.value = false
