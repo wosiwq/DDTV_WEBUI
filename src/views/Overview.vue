@@ -15,9 +15,7 @@
       :filter="filter"></OverviewHeader>
     <div class="h-[calc(100%-50px)]">
       <ElScrollbar>
-        <VirtualizedCard
-          :room-info-list="roomInfoList"
-          :current-filter-state="currentFilterState"></VirtualizedCard>
+        <VirtualizedCard :room-info-list="roomInfoList"></VirtualizedCard>
       </ElScrollbar>
     </div>
   </div>
@@ -35,6 +33,10 @@ const roomInfoList = ref<CompleteInfo[]>([])
 const isLoading = ref(true)
 const currentFilterState = ref(0)
 const showAddRoom = ref(false)
+
+const changeUrl = (index: number, base64: string) => {
+  roomInfoList.value[index].roomInfo.coverFromUser = base64
+}
 
 const getData = () => {
   isLoading.value = true

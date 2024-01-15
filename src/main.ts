@@ -1,6 +1,6 @@
 import '@/api/instance'
 import 'element-plus/theme-chalk/dark/css-vars.css'
-import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+// import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import VueVirtualScroller from 'vue-virtual-scroller'
 import { createPinia } from 'pinia'
 import 'virtual:uno.css'

@@ -1,5 +1,5 @@
 <template>
-  <ElConfigProvider :locale="locale">
+  <ElConfigProvider :locale="locale" class="zoom">
     <RouterView />
   </ElConfigProvider>
 </template>

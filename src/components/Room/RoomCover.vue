@@ -1,5 +1,5 @@
 <template>
-  <div class="relative h-[225px] rd">
+  <div class="relative h-[225px] w-400px rd">
     <div
       class="absolute left-0 top-0 z-1 h-[60px] w-full pl-2 pt-1"
       style="background-image: linear-gradient(0deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.5) 100%)">
@@ -12,12 +12,11 @@
       ">
       <span>{{ roomInfo.areaName }}</span>
     </div>
-    <ElImage
-      fit="cover"
+    <img
       :src="getCoverImage(roomInfo)"
       loading="lazy"
-      style="width: 400px; height: 225px"
-      class="select-none overflow-hidden rd"></ElImage>
+      style="width: 398px; height: 225px; object-fit: contain"
+      class="select-none overflow-hidden rd" />
   </div>
 </template>
 <script lang="ts" setup>
