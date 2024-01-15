@@ -12,17 +12,16 @@
       ">
       <span>{{ roomInfo.areaName }}</span>
     </div>
-    <span class="h-225px w-398px flex items-center justify-center" v-if="isLoading">Loading</span>
-    <img
-      v-else
-      :src="getCoverImage()"
-      loading="lazy"
-      style="width: 398px; height: 225px; object-fit: contain"
-      class="select-none overflow-hidden rd" />
+    <UseImage :src="getCoverImage()">
+      <template #loading>
+        <span class="h-225px w-398px flex items-center justify-center">Loading</span>
+      </template>
+      <template #error><img src="/error.png" /></template>
+    </UseImage>
   </div>
 </template>
 <script lang="ts" setup>
-import { useImage } from '@vueuse/core'
+import { UseImage } from '@vueuse/components'
 import type { RoomInfo } from '@/types/response'
 const props = defineProps({
   roomInfo: {
@@ -38,6 +37,5 @@ const getCoverImage = () => {
   }
   return '/error.png'
 }
-const { isLoading } = useImage({ src: getCoverImage() })
 </script>
 <style scoped lang="scss"></style>

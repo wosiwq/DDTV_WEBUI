@@ -1,8 +1,8 @@
 <template>
-  <div class="flex" :style="{ height: height - 54 + 'px' }" v-bind="containerProps">
+  <div :style="{ height: height - 54 + 'px' }" v-bind="containerProps">
     <div v-bind="wrapperProps">
       <div v-for="item in list" :key="item.index" class="flex">
-        <div class="card-div">
+        <div class="w-[calc(100%_-_20px)] flex items-center justify-center">
           <div
             class="ml-1 mt-1 w-400px border b-light-200 rd transition-all dark:b-dark-200"
             v-for="(i, index) in item.data"
@@ -36,14 +36,6 @@ const props = defineProps({
     default: () => ({})
   }
 })
-const getCardWidth = () => {
-  if (width.value < 1040) {
-    const cardWidth = (width.value - 64 - 16 - 20) / Math.floor((width.value - 100) / 400)
-    return cardWidth
-  }
-  const cardWidth = (width.value - 200 - 16 - 20) / Math.floor((width.value - 200 - 18 - 20) / 400)
-  return cardWidth
-}
 
 const getGridItems = computed(() => {
   if (width.value < 1040) {
@@ -67,12 +59,4 @@ const { list, containerProps, wrapperProps } = useVirtualList(getGridItemsList, 
   overscan: 1
 })
 </script>
-<style scoped lang="scss">
-.card-div {
-  display: grid;
-  width: calc(100% - 20px);
-  grid-template-columns: repeat(auto-fill, 400px);
-  grid-gap: 12px;
-  justify-content: center;
-}
-</style>
+<style scoped lang="scss"></style>
