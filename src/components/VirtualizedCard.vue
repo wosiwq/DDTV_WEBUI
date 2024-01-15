@@ -8,7 +8,6 @@
             v-for="(i, index) in item.data"
             :key="'item' + index">
             <RoomCover :room-info="i.roomInfo"></RoomCover>
-            <!-- <div class="h-225px w-400px bg-blue"></div> -->
             <div class="divide-y-1 divide-light-200 dark:divide-dark-200">
               <RoomUser
                 :is-download="i.taskStatus.isDownload"
@@ -20,27 +19,6 @@
         </div>
       </div>
     </div>
-    <!-- <RecycleScroller -->
-    <!-- :items="roomInfoList" -->
-    <!-- :grid-items="getGridItems()" -->
-    <!-- :item-size="340" -->
-    <!-- :item-secondary-size="getCardWidth()" -->
-    <!-- :buffer="400" -->
-    <!-- class="h-full p-2" -->
-    <!-- key-field="uid"> -->
-    <!-- <template #default="{ item }"> -->
-    <!-- <div class="absolute ml-1 mt-1 border b-light-200 rd transition-all dark:b-dark-200"> -->
-    <!-- <RoomCover :room-info="item.roomInfo"></RoomCover> -->
-    <!-- <div class="divide-y-1 divide-light-200 dark:divide-dark-200"> -->
-    <!-- <RoomUser -->
-    <!-- :is-download="item.taskStatus.isDownload" -->
-    <!-- :user-info="item.userInfo" -->
-    <!-- :room-info="item.roomInfo"></RoomUser> -->
-    <!-- <RoomAction :user-info="item.userInfo"></RoomAction> -->
-    <!-- </div> -->
-    <!-- </div> -->
-    <!-- </template> -->
-    <!-- </RecycleScroller> -->
   </div>
 </template>
 <script lang="ts" setup>
