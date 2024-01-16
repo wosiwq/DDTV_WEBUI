@@ -15,7 +15,36 @@
       :filter="filter"></OverviewHeader>
     <div class="h-[calc(100%-50px)]">
       <ElScrollbar>
-        <VirtualizedCard :room-info-list="roomInfoList"></VirtualizedCard>
+        <div class="flex justify-between">
+          <ElPagination
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            class="pl-4 pt-2"
+            layout="prev, pager, next, jumper ,total"
+            :total="total"
+            :page-size="12"
+            :background="true"></ElPagination>
+          <div class="pr-4 pt-2">
+            <ElInput
+              style="width: 20rem"
+              v-model="searchWord"
+              placeholder="UID/昵称/房间号/直播标题">
+              <template #append>
+                <el-button :icon="Search" />
+              </template>
+            </ElInput>
+          </div>
+        </div>
+        <VirtualizedCard :room-info-list="pagedData"></VirtualizedCard>
+        <ElPagination
+          hide-on-single-page
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          class="pb-2 pl-4"
+          layout="prev, pager, next, jumper, total"
+          :total="total"
+          :page-size="12"
+          :background="true"></ElPagination>
       </ElScrollbar>
     </div>
   </div>
@@ -25,18 +54,48 @@
 import { FilterState } from '@/enums'
 import Plus from '@/assets/icons/svg/plus-circle-fill.svg'
 import VirtualizedCard from '@/components/VirtualizedCard.vue'
-import { getDetailedRoomInfo } from '@/api/get_room'
+import { getDetailedRoomInfoList } from '@/api/get_room'
 import type { CompleteInfo } from '@/types/response'
 import OverviewHeader from '@/components/OverviewHeader.vue'
+import { Search } from '@element-plus/icons-vue'
+
 const rawRoomInfoList = ref<CompleteInfo[]>([])
 const roomInfoList = ref<CompleteInfo[]>([])
+
 const isLoading = ref(true)
 const currentFilterState = ref(0)
 const showAddRoom = ref(false)
+const currentPage = ref(1)
+const searchWord = ref('')
+
+const total = computed(() => {
+  return listFilterBySearchWord(roomInfoList.value).length
+})
+
+const pagedData = computed(() => {
+  const start = (currentPage.value - 1) * 12
+  const end = start + 12
+  return listFilterBySearchWord(roomInfoList.value).slice(start, end)
+})
+
+const listFilterBySearchWord = (list: CompleteInfo[]) => {
+  return list.filter((item) => {
+    return (
+      item.roomInfo.title.includes(searchWord.value) ||
+      item.userInfo.name.includes(searchWord.value) ||
+      item.userInfo.uid.toString().includes(searchWord.value) ||
+      item.roomInfo.roomId.toString().includes(searchWord.value)
+    )
+  })
+}
+
+function handleCurrentChange(val: number) {
+  currentPage.value = val
+}
 
 const getData = () => {
   isLoading.value = true
-  getDetailedRoomInfo({ quantity: 0, page: 1 }).then((res) => {
+  getDetailedRoomInfoList({ quantity: 0, page: 1 }).then((res) => {
     rawRoomInfoList.value = res.data.data.completeInfoList
     roomInfoList.value = rawRoomInfoList.value
     isLoading.value = false
@@ -44,7 +103,7 @@ const getData = () => {
 }
 const setDate = () => {
   isLoading.value = true
-  getDetailedRoomInfo({ quantity: 0, page: 1 }).then((res) => {
+  getDetailedRoomInfoList({ quantity: 0, page: 1 }).then((res) => {
     roomInfoList.value = res.data.data.completeInfoList
     isLoading.value = false
   })

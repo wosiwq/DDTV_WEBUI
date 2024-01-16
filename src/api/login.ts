@@ -9,8 +9,14 @@ export function getLoginQrcode() {
     responseType: 'blob'
   })
 }
+export function getLoginUrl() {
+  return instance.get<Response<any>>('login/get_login_url')
+}
 export function getUserAgreement() {
   return instance.post<Response<any>>('login/use_agree')
+}
+export function getUserAgreementState() {
+  return instance.post<Response<any>>('login/use_agree_state')
 }
 export function doReLogin() {
   return instance.post<Response<any>>('login/re_login')

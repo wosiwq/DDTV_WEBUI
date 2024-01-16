@@ -12,16 +12,12 @@
       ">
       <span>{{ roomInfo.areaName }}</span>
     </div>
-    <UseImage :src="getCoverImage()">
-      <template #loading>
-        <span class="h-225px w-398px flex items-center justify-center">Loading</span>
-      </template>
+    <ElImage :src="getCoverImage()">
       <template #error><img src="/error.png" /></template>
-    </UseImage>
+    </ElImage>
   </div>
 </template>
 <script lang="ts" setup>
-import { UseImage } from '@vueuse/components'
 import type { RoomInfo } from '@/types/response'
 const props = defineProps({
   roomInfo: {
