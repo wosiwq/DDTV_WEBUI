@@ -11,6 +11,6 @@ export function getDetailedRoomInfoList(data: { quantity: number; page: number; 
 export function getBasicRoomInfoList(data: { quantity: number; page: number; type?: number }) {
   return instance.post<Response<any>>('get_rooms/batch_basic_room_information', data)
 }
-export function getRoomHeartbeat(data: { quantity: number; page: number; type?: number }) {
+export function getRoomInfo(data: { quantity: number; page: number; type?: number }) {
   return instance.post<Response<any>>('get_rooms/room_information', data)
 }
