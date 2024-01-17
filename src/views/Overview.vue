@@ -18,11 +18,13 @@
         <div class="flex justify-between">
           <ElPagination
             @current-change="handleCurrentChange"
+            @size-change="handlePageSizeChange"
             :current-page="currentPage"
+            :page-size="pageSize"
+            :page-sizes="[12, 24, 36, 48, 60, 72, 84, 96, 108, 120]"
             class="pl-4 pt-2"
-            layout="prev, pager, next, jumper ,total"
+            layout="sizes, prev, pager, next, jumper, total"
             :total="total"
-            :page-size="12"
             :background="true"></ElPagination>
           <div class="pr-4 pt-2">
             <ElInput
@@ -39,11 +41,13 @@
         <ElPagination
           hide-on-single-page
           @current-change="handleCurrentChange"
+          @size-change="handlePageSizeChange"
           :current-page="currentPage"
+          :page-size="pageSize"
+          :page-sizes="[12, 24, 36, 48, 60, 72, 84, 96, 108, 120]"
           class="pb-2 pl-4"
-          layout="prev, pager, next, jumper, total"
+          layout="sizes, prev, pager, next, jumper, total"
           :total="total"
-          :page-size="12"
           :background="true"></ElPagination>
       </ElScrollbar>
     </div>
@@ -59,6 +63,7 @@ import type { CompleteInfo } from '@/types/response'
 import OverviewHeader from '@/components/OverviewHeader.vue'
 import { Search } from '@element-plus/icons-vue'
 
+const pageSize = ref(12)
 const roomInfoList = ref<CompleteInfo[]>([])
 
 const isLoading = ref(true)
@@ -73,11 +78,15 @@ function handleCurrentChange(val: number) {
   currentPage.value = val
   getData(currentPage.value)
 }
+function handlePageSizeChange(val: number) {
+  pageSize.value = val
+  getData(currentPage.value)
+}
 
 const getData = (page: number) => {
   isLoading.value = true
   getDetailedRoomInfoList({
-    quantity: 12,
+    quantity: pageSize.value,
     page: page,
     type: currentFilterState.value
   }).then((res) => {
@@ -89,6 +98,7 @@ const getData = (page: number) => {
 const setDate = () => {
   isLoading.value = true
   currentPage.value = 1
+  pageSize.value = 12
   getDetailedRoomInfoList({ quantity: 12, page: 1 }).then((res) => {
     roomInfoList.value = res.data.data.completeInfoList
     isLoading.value = false
