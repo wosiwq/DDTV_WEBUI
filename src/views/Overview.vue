@@ -35,7 +35,7 @@
             </ElInput>
           </div>
         </div>
-        <VirtualizedCard :room-info-list="pagedData"></VirtualizedCard>
+        <VirtualizedCard :room-info-list="roomInfoList"></VirtualizedCard>
         <ElPagination
           hide-on-single-page
           @current-change="handleCurrentChange"
@@ -51,7 +51,7 @@
   <ElDialog v-model="showAddRoom"></ElDialog>
 </template>
 <script lang="ts" setup>
-import { FilterState } from '@/enums'
+import { SearchType } from '@/enums'
 import Plus from '@/assets/icons/svg/plus-circle-fill.svg'
 import VirtualizedCard from '@/components/VirtualizedCard.vue'
 import { getDetailedRoomInfoList } from '@/api/get_room'
@@ -59,79 +59,45 @@ import type { CompleteInfo } from '@/types/response'
 import OverviewHeader from '@/components/OverviewHeader.vue'
 import { Search } from '@element-plus/icons-vue'
 
-const rawRoomInfoList = ref<CompleteInfo[]>([])
 const roomInfoList = ref<CompleteInfo[]>([])
 
 const isLoading = ref(true)
-const currentFilterState = ref(0)
+const currentFilterState = ref<SearchType>(0)
 const showAddRoom = ref(false)
 const currentPage = ref(1)
 const searchWord = ref('')
 
-const total = computed(() => {
-  return listFilterBySearchWord(roomInfoList.value).length
-})
-
-const pagedData = computed(() => {
-  const start = (currentPage.value - 1) * 12
-  const end = start + 12
-  return listFilterBySearchWord(roomInfoList.value).slice(start, end)
-})
-
-const listFilterBySearchWord = (list: CompleteInfo[]) => {
-  return list.filter((item) => {
-    return (
-      item.roomInfo.title.includes(searchWord.value) ||
-      item.userInfo.name.includes(searchWord.value) ||
-      item.userInfo.uid.toString().includes(searchWord.value) ||
-      item.roomInfo.roomId.toString().includes(searchWord.value)
-    )
-  })
-}
+const total = ref(0)
 
 function handleCurrentChange(val: number) {
   currentPage.value = val
+  getData()
 }
 
 const getData = () => {
   isLoading.value = true
-  getDetailedRoomInfoList({ quantity: 0, page: 1 }).then((res) => {
-    rawRoomInfoList.value = res.data.data.completeInfoList
-    roomInfoList.value = rawRoomInfoList.value
+  getDetailedRoomInfoList({
+    quantity: 12,
+    page: currentPage.value,
+    type: currentFilterState.value
+  }).then((res) => {
+    roomInfoList.value = res.data.data.completeInfoList
+    total.value = res.data.data.total
     isLoading.value = false
   })
 }
 const setDate = () => {
   isLoading.value = true
-  getDetailedRoomInfoList({ quantity: 0, page: 1 }).then((res) => {
+  currentPage.value = 1
+  getDetailedRoomInfoList({ quantity: 12, page: 1 }).then((res) => {
     roomInfoList.value = res.data.data.completeInfoList
     isLoading.value = false
   })
 }
 
-const filter = (state: FilterState) => {
+const filter = (state: SearchType) => {
   currentFilterState.value = state
-  switch (state) {
-    case FilterState.All:
-      roomInfoList.value = rawRoomInfoList.value
-      break
-    case FilterState.NotLive:
-      roomInfoList.value = rawRoomInfoList.value.filter((item) => !item.roomInfo.liveStatus)
-      break
-    case FilterState.Live:
-      roomInfoList.value = rawRoomInfoList.value.filter((item) => item.roomInfo.liveStatus)
-      break
-    case FilterState.LiveAndRecording:
-      roomInfoList.value = rawRoomInfoList.value.filter(
-        (item) => item.taskStatus.isDownload && item.roomInfo.liveStatus
-      )
-      break
-    case FilterState.LiveButNotRecording:
-      roomInfoList.value = rawRoomInfoList.value.filter(
-        (item) => !item.taskStatus.isDownload && item.roomInfo.liveStatus
-      )
-      break
-  }
+  setDate()
 }
 onMounted(() => {
   getData()

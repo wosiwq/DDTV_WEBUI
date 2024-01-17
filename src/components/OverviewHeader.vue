@@ -1,11 +1,11 @@
 <template>
   <div class="w-full flex items-center justify-between bg-light-200 p-2 dark:bg-dark-400">
     <ElButtonGroup>
-      <ElButton type="info" @click="filter(0)">全部</ElButton>
-      <ElButton type="info" @click="filter(1)">未开播</ElButton>
-      <ElButton type="info" @click="filter(2)">直播中</ElButton>
-      <ElButton type="info" @click="filter(3)">录制中</ElButton>
-      <ElButton type="info" @click="filter(4)">未录制</ElButton>
+      <ElButton type="info" @click="filter(SearchType.All)">全部</ElButton>
+      <ElButton type="info" @click="filter(SearchType.NotLive)">未开播</ElButton>
+      <ElButton type="info" @click="filter(SearchType.Live)">直播中</ElButton>
+      <ElButton type="info" @click="filter(SearchType.LiveAndRecording)">录制中</ElButton>
+      <ElButton type="info" @click="filter(SearchType.LiveButNotRecording)">未录制</ElButton>
     </ElButtonGroup>
     <ElButtonGroup>
       <ElButton type="success" @click="changeAllRec(true)">开启所有录制</ElButton>
@@ -16,6 +16,7 @@
 <script lang="ts" setup>
 import { setRoomsRecordState } from '@/api/set_room'
 import type { CompleteInfo } from '@/types/response'
+import { SearchType } from '@/enums'
 const props = defineProps({
   items: {
     type: Object as PropType<CompleteInfo[]>,
@@ -26,7 +27,7 @@ const props = defineProps({
     default: () => {}
   },
   filter: {
-    type: Function as PropType<(state: number) => void>,
+    type: Function as PropType<(state: SearchType) => void>,
     default: () => {}
   }
 })
