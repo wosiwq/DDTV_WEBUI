@@ -30,8 +30,9 @@
             <ElInput
               style="width: 20rem"
               v-model="searchWord"
-              placeholder="UID/昵称/房间号/直播标题">
-              <template #append>
+              @input="handleSearchWordChange"
+              placeholder="昵称">
+              <template #prepend>
                 <el-button :icon="Search" />
               </template>
             </ElInput>
@@ -55,13 +56,16 @@
   <ElDialog v-model="showAddRoom"></ElDialog>
 </template>
 <script lang="ts" setup>
-import { SearchType } from '@/enums'
-import Plus from '@/assets/icons/svg/plus-circle-fill.svg'
 import VirtualizedCard from '@/components/VirtualizedCard.vue'
-import { getDetailedRoomInfoList } from '@/api/get_room'
-import type { CompleteInfo } from '@/types/response'
 import OverviewHeader from '@/components/OverviewHeader.vue'
+import Plus from '@/assets/icons/svg/plus-circle-fill.svg'
 import { Search } from '@element-plus/icons-vue'
+import { useDebounceFn } from '@vueuse/core'
+
+import type { CompleteInfo } from '@/types/response'
+import { SearchType } from '@/enums'
+
+import { getDetailedRoomInfoList } from '@/api/get_room'
 
 const pageSize = ref(12)
 const roomInfoList = ref<CompleteInfo[]>([])
@@ -78,13 +82,24 @@ function handleCurrentChange(val: number) {
   currentPage.value = val
   getData(currentPage.value)
 }
+
 function handlePageSizeChange(val: number) {
   pageSize.value = val
   getData(currentPage.value)
 }
 
-const getData = (page: number) => {
+const handleSearchWordChange = useDebounceFn((val: string) => {
   isLoading.value = true
+  currentPage.value = 1
+  searchWord.value = val
+  getDetailedRoomInfoList({ quantity: 12, page: 1, screen_name: searchWord.value }).then((res) => {
+    roomInfoList.value = res.data.data.completeInfoList
+    total.value = res.data.data.total
+    isLoading.value = false
+  })
+}, 1000)
+
+const getData = (page: number) => {
   getDetailedRoomInfoList({
     quantity: pageSize.value,
     page: page,
