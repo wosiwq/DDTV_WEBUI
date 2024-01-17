@@ -71,14 +71,14 @@ const total = ref(0)
 
 function handleCurrentChange(val: number) {
   currentPage.value = val
-  getData()
+  getData(currentPage.value)
 }
 
-const getData = () => {
+const getData = (page: number) => {
   isLoading.value = true
   getDetailedRoomInfoList({
     quantity: 12,
-    page: currentPage.value,
+    page: page,
     type: currentFilterState.value
   }).then((res) => {
     roomInfoList.value = res.data.data.completeInfoList
@@ -97,10 +97,11 @@ const setDate = () => {
 
 const filter = (state: SearchType) => {
   currentFilterState.value = state
-  setDate()
+  currentPage.value = 1
+  getData(1)
 }
 onMounted(() => {
-  getData()
+  getData(1)
 })
 </script>
 <style scoped lang="scss">
