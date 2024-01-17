@@ -9,11 +9,12 @@ export function getLoginQrcode() {
     responseType: 'blob'
   })
 }
+//TODO - 更换成url生成图片
 export function getLoginUrl() {
   return instance.get<Response<any>>('login/get_login_url')
 }
-export function getUserAgreement() {
-  return instance.post<Response<any>>('login/use_agree')
+export function getUserAgreement(data: { check: 'y' | 'n' }) {
+  return instance.post<Response<any>>('login/use_agree', data)
 }
 export function getUserAgreementState() {
   return instance.post<Response<any>>('login/use_agree_state')
