@@ -19,3 +19,6 @@ export function addRoom(data: {
 }) {
   return instance.post<Response<any>>('set_rooms/add_room', data)
 }
+export function delRoom(data: { uid?: bigint; room_id?: number }) {
+  return instance.post<Response<any>>('set_rooms/del_room', data)
+}

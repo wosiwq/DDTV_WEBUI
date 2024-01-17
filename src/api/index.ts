@@ -1,4 +1,3 @@
-// 导入axios
 import type { Response } from '@/types'
 import { instance } from './instance'
 

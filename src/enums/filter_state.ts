@@ -1,8 +1,8 @@
-export enum FilterState {
+export enum SearchType {
   All = 0,
-  NotLive = 1,
+  LiveAndRecording = 1,
   Live = 2,
-  LiveAndRecording = 3,
+  NotLive = 3,
   LiveButNotRecording = 4
 }
-export default FilterState
+export default SearchType
