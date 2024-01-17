@@ -75,8 +75,8 @@ const currentFilterState = ref<SearchType>(0)
 const showAddRoom = ref(false)
 const currentPage = ref(1)
 const searchWord = ref('')
-
 const total = ref(0)
+let timer: ReturnType<typeof setInterval> | undefined = undefined
 
 function handleCurrentChange(val: number) {
   currentPage.value = val
@@ -126,7 +126,23 @@ const filter = (state: SearchType) => {
   getData(1)
 }
 onMounted(() => {
+  timer = setInterval(() => {
+    getDetailedRoomInfoList({
+      quantity: pageSize.value,
+      page: currentPage.value,
+      type: currentFilterState.value,
+      screen_name: searchWord.value
+    }).then((res) => {
+      roomInfoList.value = res.data.data.completeInfoList
+      total.value = res.data.data.total
+    })
+  }, 5000)
   getData(1)
+})
+onUnmounted(() => {
+  if (timer) {
+    clearInterval(timer)
+  }
 })
 </script>
 <style scoped lang="scss">

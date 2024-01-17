@@ -15,7 +15,7 @@ export function delRoom(data: AtLeastOne<{ uid: bigint; room_id: number }>) {
 }
 
 export function setRoomsRecordState(data: { uid: bigint[]; state: boolean }) {
-  return instance.post<Response<any>>('set_rooms/modify_recording_settings', data)
+  return instance.post<Response<bigint[]>>('set_rooms/modify_recording_settings', data)
 }
 
 export function setRoomsDMState(data: { uid: bigint[]; state: boolean }) {
