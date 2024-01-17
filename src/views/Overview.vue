@@ -9,6 +9,7 @@
       <ElIcon :size="50" color="#60a5fa" style="vertical-align: -0.5rem"><Plus></Plus></ElIcon>
     </div>
     <OverviewHeader
+      :refresh-time="lastRefreshTime"
       :items="roomInfoList"
       class="h-50px"
       :update-fn="setDate"
@@ -75,6 +76,7 @@ const currentFilterState = ref<SearchType>(0)
 const showAddRoom = ref(false)
 const currentPage = ref(1)
 const searchWord = ref('')
+const lastRefreshTime = ref(new Date().toLocaleString())
 const total = ref(0)
 let timer: ReturnType<typeof setInterval> | undefined = undefined
 
@@ -133,6 +135,10 @@ onMounted(() => {
       type: currentFilterState.value,
       screen_name: searchWord.value
     }).then((res) => {
+      lastRefreshTime.value = new Date().toLocaleString()
+      if (roomInfoList.value === res.data.data.completeInfoList) {
+        return
+      }
       roomInfoList.value = res.data.data.completeInfoList
       total.value = res.data.data.total
     })

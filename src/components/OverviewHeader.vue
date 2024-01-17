@@ -7,10 +7,7 @@
       <ElButton type="info" @click="filter(SearchType.LiveAndRecording)">录制中</ElButton>
       <ElButton type="info" @click="filter(SearchType.LiveButNotRecording)">未录制</ElButton>
     </ElButtonGroup>
-    <ElButtonGroup>
-      <ElButton type="success" @click="changeAllRec(true)">开启所有录制</ElButton>
-      <ElButton type="danger" @click="changeAllRec(false)">关闭所有录制</ElButton>
-    </ElButtonGroup>
+    <div>{{ '最后一次更新时间：' + refreshTime }}</div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -29,6 +26,10 @@ const props = defineProps({
   filter: {
     type: Function as PropType<(state: SearchType) => void>,
     default: () => {}
+  },
+  refreshTime: {
+    type: String,
+    default: new Date().toLocaleString()
   }
 })
 const changeAllRec = (state: boolean) => {
