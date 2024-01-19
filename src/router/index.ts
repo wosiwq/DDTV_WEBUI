@@ -29,9 +29,9 @@ const router = createRouter({
           component: () => import('@/views/Overview.vue')
         },
         {
-          path: 'room_configuration',
-          name: 'room_configuration',
-          component: () => import('@/views/RoomConf.vue')
+          path: 'room_list',
+          name: 'room_list',
+          component: () => import('@/views/RoomList.vue')
         },
         {
           path: 'system_settings',
