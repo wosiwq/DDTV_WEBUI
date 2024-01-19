@@ -28,7 +28,6 @@ const SelectionCell: FunctionalComponent<SelectionCellProps> = ({
   intermediate = false,
   onChange
 }) => {
-  // @ts-ignore
   return <ElCheckbox onChange={onChange} modelValue={value} indeterminate={intermediate} />
 }
 
@@ -62,7 +61,6 @@ const columns: Column<any>[] = [
     sortable: true,
     align: 'center',
     cellRenderer: ({ cellData: isAutoRec }) => (
-      // @ts-ignore
       <ElTag type={isAutoRec ? 'success' : 'danger'}>{isAutoRec ? '开启' : '关闭'}</ElTag>
     )
   },
@@ -74,25 +72,24 @@ const columns: Column<any>[] = [
     sortable: true,
     align: 'center',
     cellRenderer: ({ cellData: isDownload }) => (
-      // @ts-ignore
       <ElTag type={isDownload ? 'success' : 'info'}>{isDownload ? '录制中' : '未录制'}</ElTag>
     )
+  },
+  {
+    key: 'operations',
+    title: '操作',
+    cellRenderer: () => (
+      <>
+        <ElButton size="small">编辑</ElButton>
+        <ElButton size="small" type="danger">
+          删除
+        </ElButton>
+      </>
+    ),
+    width: 150,
+    align: 'center',
+    fixed: TableV2FixedDir.RIGHT
   }
-  // {
-  //   key: 'operations',
-  //   title: '操作',
-  //   cellRenderer: () => (
-  //     <>
-  //       <ElButton size="small">编辑</ElButton>
-  //       <ElButton size="small" type="danger">
-  //         删除
-  //       </ElButton>
-  //     </>
-  //   ),
-  //   width: 150,
-  //   align: 'center',
-  //   fixed: TableV2FixedDir.RIGHT
-  // }
 ]
 
 columns.unshift({
