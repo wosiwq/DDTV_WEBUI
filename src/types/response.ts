@@ -1,3 +1,5 @@
+import FileTreeType from '@/enums/file_tree_type'
+import type { Optional } from '@/types'
 export interface Response<T> {
   code: number
   cmd: string
@@ -54,4 +56,13 @@ export interface TaskStatus {
   startTime: string
   endTime: string
   title: string
+}
+
+export interface fileTreeNode {
+  Name: string
+  Type: FileTreeType
+  Size: Optional<number>
+  RelativePath: Optional<string>
+  Extension: Optional<string>
+  Children: fileTreeNode[]
 }
