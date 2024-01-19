@@ -42,6 +42,11 @@ const router = createRouter({
           path: 'file_management',
           name: 'file_management',
           component: () => import('@/views/FileManagement.vue')
+        },
+        {
+          path: 'video_player',
+          name: 'video_player',
+          component: () => import('@/views/VideoPlayer.vue')
         }
       ]
     },

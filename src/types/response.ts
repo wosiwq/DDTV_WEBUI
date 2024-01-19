@@ -58,11 +58,11 @@ export interface TaskStatus {
   title: string
 }
 
-export interface fileTreeNode {
+export interface FileTreeNode {
   Name: string
   Type: FileTreeType
   Size: Optional<number>
   RelativePath: Optional<string>
   Extension: Optional<string>
-  Children: fileTreeNode[]
+  Children: FileTreeNode[]
 }
