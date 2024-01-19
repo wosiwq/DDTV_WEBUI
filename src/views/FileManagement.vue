@@ -1,33 +1,31 @@
 <template>
-  <div class="h-full flex p-2">
-    <div class="p-10">
-      <ElTree
-        class="w-5xl"
-        :data="fileTreeNode?.Children"
-        :expand-on-click-node="false"
-        :props="{ label: 'Name', children: 'Children' }">
-        <template #default="{ node, data }">
-          <span class="flex items-center justify-between" style="flex: 1">
-            <span>{{ node.label }}</span>
-            <div>
-              <span
-                v-if="data.Extension === '.mp4'"
-                @click="watchVideo(data)"
-                class="hover:text-blue">
-                查看
-              </span>
-              <a
-                download
-                v-if="data.Type === FileTreeType.File"
-                :href="data.RelativePath"
-                class="hover:text-blue">
-                下载
-              </a>
-            </div>
-          </span>
-        </template>
-      </ElTree>
-    </div>
+  <div v-loading="isLoading" class="h-full w-full flex">
+    <ElTree
+      class="h-full w-full"
+      :data="fileTreeNode?.Children"
+      :expand-on-click-node="false"
+      :props="{ label: 'Name', children: 'Children' }">
+      <template #default="{ node, data }">
+        <span class="flex items-center justify-between" style="flex: 1">
+          <span>{{ node.label }}</span>
+          <div>
+            <span
+              v-if="data.Extension === '.mp4'"
+              @click="watchVideo(data)"
+              class="hover:text-blue">
+              查看
+            </span>
+            <a
+              download
+              v-if="data.Type === FileTreeType.File"
+              :href="data.RelativePath"
+              class="hover:text-blue">
+              下载
+            </a>
+          </div>
+        </span>
+      </template>
+    </ElTree>
   </div>
 </template>
 <script lang="ts" setup>
@@ -36,6 +34,7 @@ import type { FileTreeNode } from '@/types/response'
 import FileTreeType from '@/enums/file_tree_type'
 const fileTreeNode = ref<FileTreeNode>()
 const router = useRouter()
+const isLoading = ref(true)
 
 const watchVideo = (node: FileTreeNode) => {
   router.push({
@@ -48,6 +47,7 @@ const watchVideo = (node: FileTreeNode) => {
 onMounted(() => {
   getFileTree().then((res) => {
     fileTreeNode.value = res.data.data
+    isLoading.value = false
   })
 })
 </script>
