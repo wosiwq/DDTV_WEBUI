@@ -31,7 +31,7 @@
             <ElInput
               style="width: 20rem"
               v-model="searchWord"
-              @input="handleSearchWordChange"
+              @change="handleSearchWordChange"
               placeholder="昵称">
               <template #prepend>
                 <el-button :icon="Search" />
@@ -61,7 +61,6 @@ import VirtualizedCard from '@/components/VirtualizedCard.vue'
 import OverviewHeader from '@/components/OverviewHeader.vue'
 import Plus from '@/assets/icons/svg/plus-circle-fill.svg'
 import { Search } from '@element-plus/icons-vue'
-import { useDebounceFn } from '@vueuse/core'
 
 import type { CompleteInfo } from '@/types/response'
 import { SearchType } from '@/enums'
@@ -90,7 +89,7 @@ function handlePageSizeChange(val: number) {
   getData(currentPage.value)
 }
 
-const handleSearchWordChange = useDebounceFn((val: string) => {
+const handleSearchWordChange = (val: string) => {
   isLoading.value = true
   currentPage.value = 1
   searchWord.value = val
@@ -99,7 +98,7 @@ const handleSearchWordChange = useDebounceFn((val: string) => {
     total.value = res.data.data.total
     isLoading.value = false
   })
-}, 1000)
+}
 
 const getData = (page: number) => {
   getDetailedRoomInfoList({
