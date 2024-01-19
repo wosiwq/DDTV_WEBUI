@@ -17,6 +17,9 @@ export interface CompleteInfo {
   roomInfo: RoomInfo
   taskStatus: TaskStatus
 }
+export interface CompleteInfoWithCheck extends CompleteInfo {
+  checked?: string | number | boolean
+}
 
 export interface UserInfo {
   name: string
