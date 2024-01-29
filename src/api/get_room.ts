@@ -14,6 +14,7 @@ export function getDetailedRoomInfoList(data: {
     data
   )
 }
+
 export function getBasicRoomInfoList(data: {
   quantity?: number
   page?: number
@@ -22,6 +23,7 @@ export function getBasicRoomInfoList(data: {
 }) {
   return instance.post<Response<any>>('get_rooms/batch_basic_room_information', data)
 }
+
 export function getRoomInfo(data: AtLeastOne<{ uid: bigint; room_id: number }>) {
   return instance.post<Response<any>>('get_rooms/room_information', data)
 }
