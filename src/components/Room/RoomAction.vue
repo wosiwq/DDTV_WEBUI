@@ -1,7 +1,28 @@
 <template>
   <div class="flex pb-2 pt-2 divide-x-1 divide-light-200 dark:divide-dark-200">
     <div class="action-item">切割</div>
-    <div class="action-item">开关task</div>
+    <div class="action-item">
+      <ElPopconfirm
+        :title="userInfo.appointmentRecord ? '真的要取消预约吗' : '真的要预约录制吗'"
+        @confirm="handleAppointmentRecord">
+        <template #reference>
+          <ElButton
+            size="small"
+            :disabled="userInfo.isAutoRec"
+            :type="
+              userInfo.isAutoRec ? 'success' : userInfo.appointmentRecord ? 'success' : 'info'
+            ">
+            {{
+              userInfo.isAutoRec
+                ? '自动录制中'
+                : userInfo.appointmentRecord
+                  ? '已预约录制'
+                  : '预约录制'
+            }}
+          </ElButton>
+        </template>
+      </ElPopconfirm>
+    </div>
     <div class="action-item">
       <ElSwitch
         style="height: 24px"
@@ -18,7 +39,10 @@
 <script lang="ts" setup>
 import type { UserInfo } from '@/types/response'
 import { setRoomsRecordState } from '@/api/set_room'
+import { createTask, cancelTask } from '@/api/rec_task'
+import useRoomInfoPageData from '@/hooks/useRoomInfoPageData'
 
+const pageData = useRoomInfoPageData()
 const props = defineProps({
   userInfo: {
     type: Object as PropType<UserInfo>,
@@ -38,9 +62,9 @@ const beforeChange = async () => {
     uid: [props.userInfo.uid],
     state: !props.userInfo.isAutoRec
   }
-
   try {
     await setRoomsRecordState(data)
+    pageData.getData(pageData.currentPage.value)
     ElMessage.success('修改成功')
     return true
   } catch {
@@ -48,6 +72,35 @@ const beforeChange = async () => {
     return false
   } finally {
     loading.value = false
+  }
+}
+const handleAppointmentRecord = () => {
+  if (userInfo.value.appointmentRecord) {
+    const data = {
+      uid: props.userInfo.uid,
+      state: false
+    }
+    try {
+      cancelTask(data).then(() => {
+        pageData.getData(pageData.currentPage.value)
+        ElMessage.success('修改成功')
+      })
+    } catch {
+      ElMessage.error('修改失败')
+    }
+  } else {
+    const data = {
+      uid: props.userInfo.uid,
+      state: true
+    }
+    try {
+      createTask(data).then(() => {
+        pageData.getData(pageData.currentPage.value)
+        ElMessage.success('修改成功')
+      })
+    } catch {
+      ElMessage.error('修改失败')
+    }
   }
 }
 </script>

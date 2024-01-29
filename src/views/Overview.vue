@@ -1,7 +1,7 @@
 <template>
   <meta name="referrer" content="no-referrer" />
   <div
-    v-loading="isLoading"
+    v-loading="pageData.isLoading.value"
     class="relative h-full divide-y-1 divide-light-100 dark:divide-dark-100">
     <div
       class="absolute bottom-20 right-30 z-2 rd-999px bg-white bg-clip-padding"
@@ -9,8 +9,8 @@
       <ElIcon :size="50" color="#60a5fa" style="vertical-align: -0.5rem"><Plus></Plus></ElIcon>
     </div>
     <OverviewHeader
-      :refresh-time="lastRefreshTime"
-      :items="roomInfoList"
+      :refresh-time="pageData.lastRefreshTime.value"
+      :items="pageData.completeInfoList.value"
       class="h-50px"
       :update-fn="setDate"
       :filter="filter"></OverviewHeader>
@@ -20,17 +20,17 @@
           <ElPagination
             @current-change="handleCurrentChange"
             @size-change="handlePageSizeChange"
-            :current-page="currentPage"
-            :page-size="pageSize"
+            :current-page="pageData.currentPage.value"
+            :page-size="pageData.pageSize.value"
             :page-sizes="[12, 24, 36, 48, 60, 72, 84, 96, 108, 120]"
             class="pl-4 pt-2"
             layout="sizes, prev, pager, next, jumper, total"
-            :total="total"
+            :total="pageData.total.value"
             :background="true"></ElPagination>
           <div class="pr-4 pt-2">
             <ElInput
               style="width: 20rem"
-              v-model="searchWord"
+              v-model="pageData.searchWord.value"
               @change="handleSearchWordChange"
               placeholder="昵称">
               <template #prepend>
@@ -39,114 +39,113 @@
             </ElInput>
           </div>
         </div>
-        <VirtualizedCard :room-info-list="roomInfoList"></VirtualizedCard>
+        <VirtualizedCard :room-info-list="pageData.completeInfoList.value"></VirtualizedCard>
         <ElPagination
           hide-on-single-page
           @current-change="handleCurrentChange"
           @size-change="handlePageSizeChange"
-          :current-page="currentPage"
-          :page-size="pageSize"
+          :current-page="pageData.currentPage.value"
+          :page-size="pageData.pageSize.value"
           :page-sizes="[12, 24, 36, 48, 60, 72, 84, 96, 108, 120]"
           class="pb-2 pl-4"
           layout="sizes, prev, pager, next, jumper, total"
-          :total="total"
+          :total="pageData.total.value"
           :background="true"></ElPagination>
       </ElScrollbar>
     </div>
   </div>
-  <ElDialog v-model="showAddRoom"></ElDialog>
+  <ElDialog
+    v-model="showAddRoom"
+    title="添加直播间"
+    center
+    align-center
+    style="min-width: 320px; width: 500px">
+    <ElForm label-width="120px" :model="addRoomData">
+      <ElFormItem label="UID">
+        <ElInput placeholder="UID和房间号二选一" v-model="addRoomData.uid"></ElInput>
+      </ElFormItem>
+      <ElFormItem label="房间号">
+        <ElInput placeholder="UID和房间号二选一" v-model="addRoomData.room_id"></ElInput>
+      </ElFormItem>
+      <ElFormItem label="自动录制"><ElSwitch v-model="addRoomData.auto_rec"></ElSwitch></ElFormItem>
+      <ElFormItem label="开播提醒"><ElSwitch v-model="addRoomData.remind"></ElSwitch></ElFormItem>
+      <ElFormItem label="录制弹幕">
+        <ElSwitch v-model="addRoomData.rec_danmu"></ElSwitch>
+      </ElFormItem>
+      <ElFormItem><ElButton type="primary" @click="confirmAddRoom">确认</ElButton></ElFormItem>
+    </ElForm>
+  </ElDialog>
 </template>
 <script lang="ts" setup>
 import VirtualizedCard from '@/components/VirtualizedCard.vue'
 import OverviewHeader from '@/components/OverviewHeader.vue'
 import Plus from '@/assets/icons/svg/plus-circle-fill.svg'
+import useRoomInfoPageData from '@/hooks/useRoomInfoPageData'
 import { Search } from '@element-plus/icons-vue'
-
-import type { CompleteInfo } from '@/types/response'
 import { SearchType } from '@/enums'
+import { addRoom } from '@/api/set_room'
 
-import { getDetailedRoomInfoList } from '@/api/get_room'
-
-const pageSize = ref(12)
-const roomInfoList = ref<CompleteInfo[]>([])
-
-const isLoading = ref(true)
-const currentFilterState = ref<SearchType>(0)
+const pageData = useRoomInfoPageData()
 const showAddRoom = ref(false)
-const currentPage = ref(1)
-const searchWord = ref('')
-const lastRefreshTime = ref(new Date().toLocaleString())
-const total = ref(0)
-let timer: ReturnType<typeof setInterval> | undefined = undefined
+const addRoomData = reactive({
+  uid: '',
+  room_id: '',
+  auto_rec: false,
+  remind: false,
+  rec_danmu: false
+})
 
 function handleCurrentChange(val: number) {
-  currentPage.value = val
-  getData(currentPage.value)
+  pageData.currentPage.value = val
+  pageData.getData(pageData.currentPage.value)
 }
 
 function handlePageSizeChange(val: number) {
-  pageSize.value = val
-  getData(currentPage.value)
+  pageData.pageSize.value = val
+  pageData.getData(pageData.currentPage.value)
 }
 
 const handleSearchWordChange = (val: string) => {
-  isLoading.value = true
-  currentPage.value = 1
-  searchWord.value = val
-  getDetailedRoomInfoList({ quantity: 12, page: 1, screen_name: searchWord.value }).then((res) => {
-    roomInfoList.value = res.data.data.completeInfoList
-    total.value = res.data.data.total
-    isLoading.value = false
-  })
+  pageData.isLoading.value = true
+  pageData.currentPage.value = 1
+  pageData.searchWord.value = val
+  pageData.getData(pageData.currentPage.value)
 }
 
-const getData = (page: number) => {
-  getDetailedRoomInfoList({
-    quantity: pageSize.value,
-    page: page,
-    type: currentFilterState.value
-  }).then((res) => {
-    roomInfoList.value = res.data.data.completeInfoList
-    total.value = res.data.data.total
-    isLoading.value = false
-  })
-}
 const setDate = () => {
-  isLoading.value = true
-  currentPage.value = 1
-  pageSize.value = 12
-  getDetailedRoomInfoList({ quantity: 12, page: 1 }).then((res) => {
-    roomInfoList.value = res.data.data.completeInfoList
-    isLoading.value = false
-  })
+  pageData.isLoading.value = true
+  pageData.currentPage.value = 1
+  pageData.pageSize.value = 12
+  pageData.getData(pageData.currentPage.value)
 }
 
 const filter = (state: SearchType) => {
-  currentFilterState.value = state
-  currentPage.value = 1
-  getData(1)
+  pageData.currentFilterState.value = state
+  pageData.currentPage.value = 1
+  pageData.getData(1)
 }
-onMounted(() => {
-  timer = setInterval(() => {
-    getDetailedRoomInfoList({
-      quantity: pageSize.value,
-      page: currentPage.value,
-      type: currentFilterState.value,
-      screen_name: searchWord.value
-    }).then((res) => {
-      lastRefreshTime.value = new Date().toLocaleString()
-      if (roomInfoList.value === res.data.data.completeInfoList) {
-        return
-      }
-      roomInfoList.value = res.data.data.completeInfoList
-      total.value = res.data.data.total
+
+const confirmAddRoom = () => {
+  const data = {
+    uid: BigInt(addRoomData.uid),
+    room_id: Number(addRoomData.room_id),
+    auto_rec: addRoomData.auto_rec,
+    remind: addRoomData.remind,
+    rec_danmu: addRoomData.rec_danmu
+  }
+  addRoom(data)
+    .then(() => {
+      pageData.getData(pageData.currentPage.value)
+      ElMessage.success('添加成功')
+      showAddRoom.value = false
     })
-  }, 5000)
-  getData(1)
-})
+    .catch(() => {
+      ElMessage.error('添加失败')
+    })
+}
 onUnmounted(() => {
-  if (timer) {
-    clearInterval(timer)
+  if (pageData.timer !== undefined) {
+    clearInterval(pageData.timer)
   }
 })
 </script>

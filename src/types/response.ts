@@ -32,6 +32,7 @@ export interface UserInfo {
   isRecDanmu: boolean
   sex: string
   sign: string
+  appointmentRecord: boolean
 }
 
 export interface RoomInfo {
