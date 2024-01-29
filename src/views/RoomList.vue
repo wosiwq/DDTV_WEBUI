@@ -10,6 +10,7 @@ import { TableV2FixedDir } from 'element-plus'
 import { useElementSize } from '@vueuse/core'
 import { getDetailedRoomInfoList } from '@/api/get_room'
 import type { FunctionalComponent } from 'vue'
+import { delRoom } from '@/api/set_room'
 
 const roomInfoList = ref<CompleteInfoWithCheck[]>([])
 const total = ref(0)
@@ -77,13 +78,24 @@ const columns: Column<any>[] = [
   },
   {
     key: 'operations',
+    dataKey: 'uid',
     title: '操作',
-    cellRenderer: () => (
+    cellRenderer: ({ cellData: uid }) => (
       <>
         <ElButton size="small">编辑</ElButton>
-        <ElButton size="small" type="danger">
-          删除
-        </ElButton>
+        <ElPopconfirm
+          title="确认要删除吗"
+          onConfirm={() => {
+            handelDelRoom(uid)
+          }}>
+          {{
+            reference: () => (
+              <ElButton size="small" type="danger">
+                删除
+              </ElButton>
+            )
+          }}
+        </ElPopconfirm>
       </>
     ),
     width: 150,
@@ -126,6 +138,16 @@ const getData = () => {
     total.value = res.data.data.total
     isLoading.value = false
   })
+}
+const handelDelRoom = (uid: bigint) => {
+  delRoom({ uid })
+    .then(() => {
+      getData()
+      ElMessage.success('删除成功')
+    })
+    .catch(() => {
+      ElMessage.error('删除失败')
+    })
 }
 onMounted(() => {
   getData()

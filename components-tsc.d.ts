@@ -8,4 +8,5 @@ declare global {
   const ElTag: (typeof import('element-plus/es'))['ElTag']
   const ElButton: (typeof import('element-plus/es'))['ElButton']
   const ElCheckbox: (typeof import('element-plus/es'))['ElCheckbox']
+  const ElPopconfirm: (typeof import('element-plus/es'))['ElPopconfirm']
 }
