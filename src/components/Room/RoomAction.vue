@@ -1,6 +1,10 @@
 <template>
   <div class="flex pb-2 pt-2 divide-x-1 divide-light-200 dark:divide-dark-200">
-    <div class="action-item">切割</div>
+    <div class="action-item">
+      <ElTooltip content="立即分割文件" placement="top">
+        <ElIcon class="hover:cursor-pointer hover:text-blue"><Cut></Cut></ElIcon>
+      </ElTooltip>
+    </div>
     <div class="action-item">
       <ElPopconfirm
         :title="userInfo.appointmentRecord ? '真的要取消预约吗' : '真的要预约录制吗'"
@@ -33,7 +37,9 @@
         :loading="loading"
         :before-change="beforeChange"></ElSwitch>
     </div>
-    <div class="action-item">设置</div>
+    <div class="action-item">
+      <ElIcon class="hover:cursor-pointer hover:text-blue"><Ellipsis></Ellipsis></ElIcon>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -41,6 +47,8 @@ import type { UserInfo } from '@/types/response'
 import { setRoomsRecordState } from '@/api/set_room'
 import { createTask, cancelTask } from '@/api/rec_task'
 import useRoomInfoPageData from '@/hooks/useRoomInfoPageData'
+import Ellipsis from '@/assets/icons/svg/ellipsis-v.svg'
+import Cut from '@/assets/icons/svg/cut.svg'
 
 const pageData = useRoomInfoPageData()
 const props = defineProps({

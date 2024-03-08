@@ -38,7 +38,7 @@ const MAX_TIME = 180 // 3分钟
 let timeElapsed = 0
 const checkLoginState = async () => {
   const res = await getLoginStatus()
-  if (res) {
+  if (res.data.data) {
     clearInterval(timer)
     timer = undefined
     ElMessage.success('登录成功!')

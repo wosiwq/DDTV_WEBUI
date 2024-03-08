@@ -1,6 +1,6 @@
 <template>
   <ElMenu router class="el-menu-vertical-demo" :collapse="isCollapse" :collapse-transition="true">
-    <ElMenuItem>
+    <ElMenuItem @click="openGithub">
       <el-icon>
         <ElImage fit="contain" src="/DDTV.png" alt="DDTV logo" />
       </el-icon>
@@ -44,6 +44,9 @@ const menuItemList = [
   { index: '/system_settings', title: '系统设置', icon: Settings },
   { index: '/file_management', title: '文件管理', icon: Folder }
 ]
+const openGithub = () => {
+  window.open('https://github.com/wosiwq/DDTV_WEBUI', '_blank')
+}
 </script>
 
 <style scoped lang="scss">
