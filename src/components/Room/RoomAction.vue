@@ -38,8 +38,16 @@
         :before-change="beforeChange"></ElSwitch>
     </div>
     <div class="action-item">
-      <ElIcon class="hover:cursor-pointer hover:text-blue"><Ellipsis></Ellipsis></ElIcon>
+      <ElPopover placement="top" :width="80" trigger="hover" :append-to="popover_main">
+        <template #reference>
+          <ElIcon class="hover:cursor-pointer hover:text-blue"><Ellipsis></Ellipsis></ElIcon>
+        </template>
+        <div class="flex flex-col items-center">
+          <ElButton text class="w-full">房间设置</ElButton>
+        </div>
+      </ElPopover>
     </div>
+    <div ref="popover_main"></div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -51,6 +59,7 @@ import Ellipsis from '@/assets/icons/svg/ellipsis-v.svg'
 import Cut from '@/assets/icons/svg/cut.svg'
 
 const pageData = useRoomInfoPageData()
+const popover_main = ref<HTMLElement | null>(null)
 const props = defineProps({
   userInfo: {
     type: Object as PropType<UserInfo>,
@@ -115,5 +124,8 @@ const handleAppointmentRecord = () => {
 <style scoped lang="scss">
 .action-item {
   @apply w-full flex items-center justify-center;
+}
+.el-button + .el-button {
+  margin-left: 0;
 }
 </style>

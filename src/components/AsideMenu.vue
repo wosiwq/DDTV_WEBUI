@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Folder, Home, Indent, Outdent, Settings, AlignLeft } from '@/assets/icons'
+import { Folder, Home, Indent, Outdent, Settings, AlignLeft, InfoCircle } from '@/assets/icons'
 import { useWindowSize } from '@vueuse/core'
 import { ref } from 'vue'
 const { width } = useWindowSize()
@@ -42,7 +42,8 @@ const menuItemList = [
   { index: '/', title: '概览', icon: Home },
   { index: '/room_list', title: '直播列表', icon: AlignLeft },
   { index: '/system_settings', title: '系统设置', icon: Settings },
-  { index: '/file_management', title: '文件管理', icon: Folder }
+  { index: '/file_management', title: '文件管理', icon: Folder },
+  { index: '/about', title: '关于', icon: InfoCircle }
 ]
 const openGithub = () => {
   window.open('https://github.com/wosiwq/DDTV_WEBUI', '_blank')

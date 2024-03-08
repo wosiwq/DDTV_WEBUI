@@ -6,5 +6,6 @@ import Indent from './svg/indent.svg'
 import Outdent from './svg/outdent.svg'
 import AlignLeft from './svg/align-left.svg'
 import Search from './svg/search.svg'
+import InfoCircle from './svg/info-circle.svg'
 
-export { Home, Edit, Settings, Folder, Indent, Outdent, AlignLeft, Search }
+export { Home, Edit, Settings, Folder, Indent, Outdent, AlignLeft, Search, InfoCircle }
