@@ -18,20 +18,22 @@
     align-center
     v-model="dialogVisible">
     <div class="bili-login-qrcode-div">
-      <ElImage :src="imageUrl" style="margin: auto"></ElImage>
+      <QrcodeVue :value="imageUrl" :size="400" :margin="2" style="margin: auto"></QrcodeVue>
     </div>
   </ElDialog>
 </template>
 <script lang="ts" setup>
 import AsideMenu from '@/components/AsideMenu.vue'
+import QrcodeVue from 'qrcode.vue'
 import { getLoginStatus } from '@/api/login'
 import { Code } from '@/enums'
 // import { LoginStatus } from '@/enums'
 // import router from '@/router'
+const router = useRouter()
 const dialogVisible = ref(false)
 const imageUrl = ref('')
 
-import { getLoginQrcode, doReLogin } from '@/api/login'
+import { doReLogin, getLoginUrl } from '@/api/login'
 import { getDokidoki } from '@/api'
 let timer: ReturnType<typeof setInterval> | undefined = undefined
 const MAX_TIME = 180 // 3分钟
@@ -43,16 +45,17 @@ const checkLoginState = async () => {
     timer = undefined
     ElMessage.success('登录成功!')
     dialogVisible.value = false
+    router.go(0)
     return
   }
   timeElapsed++
   if (timeElapsed >= MAX_TIME) {
-    getLoginQrcode()
+    getLoginUrl()
       .then((res) => {
-        return blobToBase64(res.data)
+        return res.data.data
       })
       .then((res) => {
-        imageUrl.value = res as string
+        imageUrl.value = res
       })
     timeElapsed = 0
   }
@@ -62,13 +65,13 @@ onMounted(() => {
     if (res.data.code === Code.LoginInfoFailure) {
       doReLogin()
         .then(() => {
-          return getLoginQrcode()
+          return getLoginUrl()
         })
         .then((res) => {
-          return blobToBase64(res.data)
+          return res.data.data
         })
         .then((res) => {
-          imageUrl.value = res as string
+          imageUrl.value = res
           timer = setInterval(checkLoginState, 1000)
           dialogVisible.value = true
         })
@@ -80,16 +83,6 @@ onUnmounted(() => {
     clearInterval(timer)
   }
 })
-
-const blobToBase64 = (blob: Blob) => {
-  return new Promise((resolve) => {
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      resolve(e.target?.result)
-    }
-    reader.readAsDataURL(blob)
-  })
-}
 </script>
 <style scoped lang="scss">
 .bili-login-qrcode-div {

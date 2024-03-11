@@ -9,7 +9,7 @@ export function getLoginQrcode() {
 
 //TODO - 更换成url生成图片
 export function getLoginUrl() {
-  return instance.get<Response<any>>('login/get_login_url')
+  return instance.get<Response<string>>('login/get_login_url')
 }
 
 export function getUserAgreement(data: { check: 'y' | 'n' }) {

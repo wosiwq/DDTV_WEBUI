@@ -34,6 +34,7 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElText: typeof import('element-plus/es')['ElText']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
+    ElTransfer: typeof import('element-plus/es')['ElTransfer']
     ElTree: typeof import('element-plus/es')['ElTree']
     OverviewHeader: typeof import('./src/components/OverviewHeader.vue')['default']
     RoomAction: typeof import('./src/components/Room/RoomAction.vue')['default']

@@ -1,12 +1,27 @@
 <template>
-  <div v-loading="isLoading" ref="table_div" class="h-full p-2">
-    <ElTableV2 :columns="columns" :data="roomInfoList" :width="width" :height="height" fixed />
+  <div class="h-full flex justify-between">
+    <div class="h-full w-50% flex items-center justify-center">
+      <ElCard
+        class="h-90% w-90%"
+        v-loading="isLoading"
+        ref="table_div"
+        style="--el-card-padding: 0">
+        <ElTableV2 :columns="columns" :data="roomInfoList" :width="width" :height="height" fixed />
+      </ElCard>
+    </div>
+    <div class="h-full w-50% flex items-center justify-center">
+      <div class="h-90% w-full flex flex-col items-center justify-between">
+        <div class="w-90%"><ElCard class="w-full">123</ElCard></div>
+        <div class="w-90%">
+          <ElCard></ElCard>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script lang="tsx" setup>
 import type { CompleteInfoWithCheck } from '@/types/response'
 import type { Column, CheckboxValueType } from 'element-plus'
-import { TableV2FixedDir } from 'element-plus'
 import { useElementSize } from '@vueuse/core'
 import { getDetailedRoomInfoList } from '@/api/get_room'
 import type { FunctionalComponent } from 'vue'
@@ -75,32 +90,6 @@ const columns: Column<any>[] = [
     cellRenderer: ({ cellData: isDownload }) => (
       <ElTag type={isDownload ? 'success' : 'info'}>{isDownload ? '录制中' : '未录制'}</ElTag>
     )
-  },
-  {
-    key: 'operations',
-    dataKey: 'uid',
-    title: '操作',
-    cellRenderer: ({ cellData: uid }) => (
-      <>
-        <ElButton size="small">编辑</ElButton>
-        <ElPopconfirm
-          title="确认要删除吗"
-          onConfirm={() => {
-            handelDelRoom(uid)
-          }}>
-          {{
-            reference: () => (
-              <ElButton size="small" type="danger">
-                删除
-              </ElButton>
-            )
-          }}
-        </ElPopconfirm>
-      </>
-    ),
-    width: 150,
-    align: 'center',
-    fixed: TableV2FixedDir.RIGHT
   }
 ]
 
