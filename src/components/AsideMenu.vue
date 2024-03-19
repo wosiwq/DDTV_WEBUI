@@ -32,7 +32,7 @@ import { useWindowSize } from '@vueuse/core'
 import { ref } from 'vue'
 const { width } = useWindowSize()
 
-const isCollapse = ref(false)
+const isCollapse = ref(width.value < 1040)
 
 watch(width, (newWidth) => {
   isCollapse.value = newWidth < 1040
