@@ -160,4 +160,3 @@ onUnmounted(() => {
   justify-content: center;
 }
 </style>
-@/enums/filter_state

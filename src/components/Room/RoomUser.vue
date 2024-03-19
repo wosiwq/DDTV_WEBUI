@@ -8,20 +8,21 @@
         @click="openBiliHomepage()">
         <img src="https://i0.hdslb.com/bfs/face/member/noface.jpg@52w_52h_1c_1s.webp" />
       </ElAvatar>
-      <div class="m-1 ml-2 flex flex-col items-start justify-between">
+      <div class="flex flex-col items-start justify-between p-1 pl-2">
         <span class="w-auto cursor-pointer text-sm hover:text-blue" @click="openBiliHomepage()">
-          {{ userInfo.name }}
+          {{ userInfo.name }}{{ '(' + userInfo.uid + ')' }}
         </span>
         <div>
           <span class="text-sm">房间号：</span>
           <span class="cursor-pointer text-sm hover:text-blue" @click="openBiliLiveRoom()">
-            {{ roomInfo.roomId }}
+            {{ roomInfo.roomId === 0 ? '无直播间' : roomInfo.roomId }}
           </span>
         </div>
       </div>
     </div>
-    <!-- 开播状态 -->
-    <RoomStatus :room-info="roomInfo" :is-download="isDownload"></RoomStatus>
+    <slot>
+      <RoomStatus :room-info="roomInfo" :is-download="isDownload"></RoomStatus>
+    </slot>
   </div>
 </template>
 <script lang="ts" setup>

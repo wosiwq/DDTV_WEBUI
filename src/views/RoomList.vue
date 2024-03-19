@@ -1,12 +1,50 @@
 <template>
+  <meta name="referrer" content="no-referrer" />
   <div class="h-full flex justify-between">
     <div class="h-full w-50% flex items-center justify-center">
-      <ElCard
-        class="h-90% w-90%"
-        v-loading="isLoading"
-        ref="table_div"
-        style="--el-card-padding: 0">
-        <ElTableV2 :columns="columns" :data="roomInfoList" :width="width" :height="height" fixed />
+      <ElCard class="h-90% w-90%" v-loading="isLoading" ref="tableDiv" style="--el-card-padding: 0">
+        <template #header>
+          <div ref="headerDiv" class="flex justify-between p-1 pl-2">
+            <ElCheckbox
+              v-model="allSelected"
+              :indeterminate="containsChecked && !allSelected"
+              @change="onChange"></ElCheckbox>
+            <ElInput
+              v-model="searchWord"
+              style="width: 240px"
+              :prefix-icon="Search"
+              placeholder="用户名/UID"></ElInput>
+          </div>
+        </template>
+        <div
+          v-bind="containerProps"
+          :style="'height:' + (tableDivSize.height.value - headerDivSize.height.value) + 'px'">
+          <div v-bind="wrapperProps">
+            <div
+              class="flex items-center border-t-1 pl-2 pr-1 dark:border-[#414243]"
+              v-for="item in list"
+              :key="item.data.uid.toString()">
+              <ElCheckbox
+                v-model="item.data.checked"
+                @change="(checked) => handleCheckboxChange(item.data, checked)"></ElCheckbox>
+              <RoomUser
+                class="w-full"
+                :room-info="item.data.roomInfo"
+                :user-info="item.data.userInfo"
+                :is-download="item.data.taskStatus.isDownload">
+                <div class="flex items-center space-x-1">
+                  <ElTag :type="item.data.userInfo.isAutoRec ? 'success' : 'danger'">
+                    自动录制
+                  </ElTag>
+                  <ElTag :type="item.data.userInfo.isRecDanmu ? 'success' : 'danger'">
+                    弹幕录制
+                  </ElTag>
+                  <ElTag :type="item.data.userInfo.isRemind ? 'success' : 'danger'">直播提醒</ElTag>
+                </div>
+              </RoomUser>
+            </div>
+          </div>
+        </div>
       </ElCard>
     </div>
     <div class="h-full w-50% flex items-center justify-center">
@@ -21,113 +59,66 @@
 </template>
 <script lang="tsx" setup>
 import type { CompleteInfoWithCheck } from '@/types/response'
-import type { Column, CheckboxValueType } from 'element-plus'
-import { useElementSize } from '@vueuse/core'
+import type { CheckboxValueType } from 'element-plus'
+import { useElementSize, useVirtualList } from '@vueuse/core'
 import { getDetailedRoomInfoList } from '@/api/get_room'
-import type { FunctionalComponent } from 'vue'
 import { delRoom } from '@/api/set_room'
+import { SearchType } from '@/enums'
+import { Search } from '@/assets/icons'
+import RoomUser from '@/components/Room/RoomUser.vue'
 
-const roomInfoList = ref<CompleteInfoWithCheck[]>([])
+const searchWord = ref()
+const realRoomInfoList = ref<CompleteInfoWithCheck[]>([])
+const roomInfoList = computed(() => {
+  if (!searchWord.value || !realRoomInfoList.value) return realRoomInfoList.value
+  return realRoomInfoList.value.filter((item) => {
+    return (
+      item.userInfo.name.toLowerCase().includes(searchWord.value.toLowerCase()) ||
+      item.userInfo.uid.toString().includes(searchWord.value)
+    )
+  })
+})
+const { list, containerProps, wrapperProps } = useVirtualList(roomInfoList, {
+  itemHeight: 69
+})
+const allSelected = computed(() => {
+  return roomInfoList.value.every((item) => item.checked)
+})
+const containsChecked = computed(() => {
+  return roomInfoList.value.some((item) => item.checked)
+})
 const total = ref(0)
 const isLoading = ref(true)
-const table_div = ref<HTMLElement | null>(null)
-const { width, height } = useElementSize(table_div)
-
-type SelectionCellProps = {
-  value: boolean
-  intermediate?: boolean
-  onChange: (value: CheckboxValueType) => void
-}
-
-const SelectionCell: FunctionalComponent<SelectionCellProps> = ({
-  value,
-  intermediate = false,
-  onChange
-}) => {
-  return <ElCheckbox onChange={onChange} modelValue={value} indeterminate={intermediate} />
-}
-
-const columns: Column<any>[] = [
-  {
-    key: 'userInfo.name',
-    title: '昵称',
-    dataKey: 'userInfo.name',
-    width: 150,
-    sortable: true
-  },
-  {
-    key: 'uid',
-    title: 'UID',
-    dataKey: 'uid',
-    width: 150,
-    sortable: true
-  },
-  {
-    key: 'roomId',
-    title: '房间号',
-    dataKey: 'roomId',
-    width: 150,
-    sortable: true
-  },
-  {
-    key: 'userInfo.isAutoRec',
-    title: '自动录制状态',
-    dataKey: 'userInfo.isAutoRec',
-    width: 150,
-    sortable: true,
-    align: 'center',
-    cellRenderer: ({ cellData: isAutoRec }) => (
-      <ElTag type={isAutoRec ? 'success' : 'danger'}>{isAutoRec ? '开启' : '关闭'}</ElTag>
-    )
-  },
-  {
-    key: 'taskStatus.isDownload',
-    title: '录制状态',
-    dataKey: 'taskStatus.isDownload',
-    width: 150,
-    sortable: true,
-    align: 'center',
-    cellRenderer: ({ cellData: isDownload }) => (
-      <ElTag type={isDownload ? 'success' : 'info'}>{isDownload ? '录制中' : '未录制'}</ElTag>
-    )
-  }
-]
-
-columns.unshift({
-  key: 'selection',
-  width: 50,
-  cellRenderer: ({ rowData }) => {
-    const onChange = (value: CheckboxValueType) => (rowData.checked = value)
-    return <SelectionCell value={rowData.checked} onChange={onChange} />
-  },
-
-  headerCellRenderer: () => {
-    const _data = unref(roomInfoList)
-    const onChange = (value: CheckboxValueType) =>
-      (roomInfoList.value = _data.map((row) => {
-        row.checked = value
-        return row
-      }))
-    const allSelected = _data.every((row) => row.checked)
-    const containsChecked = _data.some((row) => row.checked)
-
-    return (
-      <SelectionCell
-        value={allSelected}
-        intermediate={containsChecked && !allSelected}
-        onChange={onChange}
-      />
-    )
-  }
-})
+const tableDiv = ref<HTMLElement | null>(null)
+const headerDiv = ref<HTMLElement | null>(null)
+const tableDivSize = useElementSize(tableDiv)
+const headerDivSize = useElementSize(headerDiv)
 
 const getData = () => {
-  getDetailedRoomInfoList({}).then((res) => {
-    roomInfoList.value = res.data.data.completeInfoList
+  getDetailedRoomInfoList({ type: SearchType.Original }).then((res) => {
+    realRoomInfoList.value = res.data.data.completeInfoList
     total.value = res.data.data.total
     isLoading.value = false
   })
 }
+const onChange = (value: CheckboxValueType) => {
+  const lookup = new Map(roomInfoList.value.map((item) => [item.userInfo.uid, item.checked]))
+  realRoomInfoList.value.forEach((item) => {
+    if (lookup.has(item.userInfo.uid)) {
+      item.checked = value
+    }
+  })
+}
+
+const handleCheckboxChange = (item: CompleteInfoWithCheck, checked: CheckboxValueType) => {
+  const targetItem = realRoomInfoList.value.find(
+    (roomItem) => roomItem.userInfo.uid === item.userInfo.uid
+  )
+  if (targetItem) {
+    targetItem.checked = checked
+  }
+}
+
 const handelDelRoom = (uid: bigint) => {
   delRoom({ uid })
     .then(() => {
@@ -138,8 +129,9 @@ const handelDelRoom = (uid: bigint) => {
       ElMessage.error('删除失败')
     })
 }
+
 onMounted(() => {
   getData()
 })
 </script>
-<style scoped></style>
+<style scoped lang="scss"></style>

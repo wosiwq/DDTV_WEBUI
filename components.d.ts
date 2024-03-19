@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AsideMenu: typeof import('./src/components/AsideMenu.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
+    ElAutoResizer: typeof import('element-plus/es')['ElAutoResizer']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElButtonGroup: typeof import('element-plus/es')['ElButtonGroup']
