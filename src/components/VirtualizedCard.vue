@@ -10,7 +10,7 @@
           :is-download="i.taskStatus.isDownload"
           :user-info="i.userInfo"
           :room-info="i.roomInfo"></RoomUser>
-        <RoomAction :user-info="i.userInfo"></RoomAction>
+        <RoomAction :user-info="i.userInfo" :task-status="i.taskStatus"></RoomAction>
       </div>
     </div>
   </div>

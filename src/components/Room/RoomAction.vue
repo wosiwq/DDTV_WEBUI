@@ -2,7 +2,16 @@
   <div class="flex pb-2 pt-2 divide-x-1 divide-light-200 dark:divide-dark-200">
     <div class="action-item">
       <ElTooltip content="立即分割文件" placement="top">
-        <ElIcon class="hover:cursor-pointer hover:text-blue"><Cut></Cut></ElIcon>
+        <ElIcon
+          class=""
+          :class="
+            taskStatus.isDownload
+              ? 'hover:cursor-pointer hover:text-blue'
+              : 'hover:cursor-not-allowed text-gray'
+          "
+          @click="doSplitRecording(userInfo.uid)">
+          <Cut :color="taskStatus.isDownload ? undefined : '#9CA3AF'"></Cut>
+        </ElIcon>
       </ElTooltip>
     </div>
     <div class="action-item">
@@ -38,24 +47,19 @@
         :before-change="beforeChange"></ElSwitch>
     </div>
     <div class="action-item">
-      <ElPopover placement="top" :width="80" trigger="hover" :append-to="popover_main">
-        <template #reference>
-          <ElIcon class="hover:cursor-pointer hover:text-blue"><Ellipsis></Ellipsis></ElIcon>
-        </template>
-        <div class="flex flex-col items-center">
-          <ElButton text class="w-full">房间设置</ElButton>
-        </div>
-      </ElPopover>
+      <ElTooltip content="房间设置" placement="top">
+        <ElIcon class="hover:cursor-pointer hover:text-blue"><Settings></Settings></ElIcon>
+      </ElTooltip>
     </div>
     <div ref="popover_main"></div>
   </div>
 </template>
 <script lang="ts" setup>
-import type { UserInfo } from '@/types/response'
+import type { UserInfo, TaskStatus } from '@/types/response'
 import { setRoomsRecordState } from '@/api/set_room'
-import { createTask, cancelTask } from '@/api/rec_task'
+import { createTask, cancelTask, splitRecording } from '@/api/rec_task'
 import useRoomInfoPageData from '@/hooks/useRoomInfoPageData'
-import Ellipsis from '@/assets/icons/svg/ellipsis-v.svg'
+import { Settings } from '@/assets/icons'
 import Cut from '@/assets/icons/svg/cut.svg'
 
 const pageData = useRoomInfoPageData()
@@ -63,6 +67,10 @@ const popover_main = ref<HTMLElement | null>(null)
 const props = defineProps({
   userInfo: {
     type: Object as PropType<UserInfo>,
+    default: () => ({})
+  },
+  taskStatus: {
+    type: Object as PropType<TaskStatus>,
     default: () => ({})
   }
 })
@@ -119,6 +127,16 @@ const handleAppointmentRecord = () => {
       ElMessage.error('修改失败')
     }
   }
+}
+const doSplitRecording = (uid: bigint) => {
+  if (!props.taskStatus.isDownload) return
+  splitRecording({ uid: uid }).then((res) => {
+    if (res.data.code === 200) {
+      ElMessage.success('分割完成')
+    } else {
+      ElMessage.warning(res.data.massage)
+    }
+  })
 }
 </script>
 <style scoped lang="scss">

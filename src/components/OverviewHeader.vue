@@ -1,19 +1,59 @@
 <template>
   <div class="w-full flex items-center justify-between bg-light-200 p-2 dark:bg-dark-400">
-    <ElButtonGroup>
-      <ElButton type="info" @click="filter(SearchType.All)">全部</ElButton>
-      <ElButton type="info" @click="filter(SearchType.NotLive)">未开播</ElButton>
-      <ElButton type="info" @click="filter(SearchType.Live)">直播中</ElButton>
-      <ElButton type="info" @click="filter(SearchType.LiveAndRecording)">录制中</ElButton>
-      <ElButton type="info" @click="filter(SearchType.LiveButNotRecording)">未录制</ElButton>
+    <ElButtonGroup v-if="width > 768">
+      <ElButton
+        v-for="item in optionList"
+        :key="item.value"
+        type="info"
+        @click="searchType = item.value">
+        {{ item.label }}
+      </ElButton>
     </ElButtonGroup>
-    <div>{{ '最后一次更新时间：' + refreshTime }}</div>
+    <ElSelect v-model="searchType" v-else>
+      <ElOption
+        v-for="item in optionList"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"></ElOption>
+    </ElSelect>
+    <div class="block">{{ '上次更新：' + refreshTime }}</div>
   </div>
 </template>
 <script lang="ts" setup>
 import { setRoomsRecordState } from '@/api/set_room'
 import type { CompleteInfo } from '@/types/response'
 import { SearchType } from '@/enums'
+import { useWindowSize } from '@vueuse/core'
+const { width } = useWindowSize()
+const searchType = ref(SearchType.All)
+watch(searchType, (val) => {
+  console.log(val)
+
+  props.filter(val)
+})
+const optionList = [
+  {
+    label: '全部',
+    value: SearchType.All
+  },
+  {
+    label: '未开播',
+    value: SearchType.NotLive
+  },
+  {
+    label: '直播中',
+    value: SearchType.Live
+  },
+  {
+    label: '录制中',
+    value: SearchType.LiveAndRecording
+  },
+  {
+    label: '未录制',
+    value: SearchType.LiveButNotRecording
+  }
+]
+
 const props = defineProps({
   items: {
     type: Object as PropType<CompleteInfo[]>,
@@ -32,24 +72,5 @@ const props = defineProps({
     default: new Date().toLocaleString()
   }
 })
-const changeAllRec = (state: boolean) => {
-  const confirmInfo = state ? '开启' : '关闭'
-  ElMessageBox.confirm('此操作将' + confirmInfo + '所有录制，是否继续？', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  })
-    .then(() => {
-      // 根据items创造一个uid list
-      const uidList = props.items.map((item) => item.userInfo.uid)
-      setRoomsRecordState({ uid: uidList, state: state }).then(() => {
-        props.updateFn()
-        ElMessage.success(confirmInfo + '成功')
-      })
-    })
-    .catch(() => {
-      ElMessage.info('已取消' + confirmInfo)
-    })
-}
 </script>
 <style scoped lang="scss"></style>
