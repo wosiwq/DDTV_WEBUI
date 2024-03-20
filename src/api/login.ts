@@ -7,7 +7,6 @@ export function getLoginQrcode() {
   })
 }
 
-//TODO - 更换成url生成图片
 export function getLoginUrl() {
   return instance.get<Response<string>>('login/get_login_url')
 }
