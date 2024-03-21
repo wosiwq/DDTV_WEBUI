@@ -7,7 +7,7 @@
           :class="
             taskStatus.isDownload
               ? 'hover:cursor-pointer hover:text-blue'
-              : 'hover:cursor-not-allowed text-gray'
+              : 'hover:cursor-not-allowed '
           "
           @click="doSplitRecording(userInfo.uid)">
           <Cut :color="taskStatus.isDownload ? undefined : '#9CA3AF'"></Cut>
