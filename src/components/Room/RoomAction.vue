@@ -1,7 +1,7 @@
 <template>
   <div class="flex pb-2 pt-2 divide-x-1 divide-light-200 dark:divide-dark-200">
     <div class="action-item">
-      <ElTooltip content="立即分割文件" placement="top">
+      <ElTooltip :append-to="popover_main" content="立即分割文件" placement="top">
         <ElIcon
           class=""
           :class="
@@ -15,7 +15,7 @@
       </ElTooltip>
     </div>
     <div class="action-item">
-      <ElTooltip :content="getIconContent()" placement="top">
+      <ElTooltip :append-to="popover_main" :content="getIconContent()" placement="top">
         <ElIcon
           class="hover:cursor-pointer hover:text-blue"
           :class="getIconClassName()"
@@ -25,7 +25,7 @@
       </ElTooltip>
     </div>
     <div class="action-item">
-      <ElTooltip content="自动录制" placement="top">
+      <ElTooltip :append-to="popover_main" content="自动录制" placement="top">
         <ElSwitch
           style="height: 24px"
           inline-prompt
@@ -37,7 +37,7 @@
       </ElTooltip>
     </div>
     <div class="action-item">
-      <ElPopover :effect="isDark ? 'dark' : 'light'" placement="top">
+      <ElPopover :append-to="popover_main" :effect="isDark ? 'dark' : 'light'" placement="top">
         <div class="flex flex-col items-center"><span>修改直播间设置</span></div>
         <div class="flex flex-col items-center">
           <ElSwitch
@@ -80,7 +80,7 @@ import Stop from '@/assets/icons/svg/stop.svg'
 
 const isDark = useDark()
 const pageData = useRoomInfoPageData()
-const popover_main = ref<HTMLElement | null>(null)
+const popover_main = ref<HTMLElement | undefined>(undefined)
 const props = defineProps({
   userInfo: {
     type: Object as PropType<UserInfo>,
