@@ -21,6 +21,14 @@ export function addRoom(
 ) {
   return instance.post<Response<any>>('set_rooms/add_room', data)
 }
+export function addRooms(data: {
+  uid: bigint[]
+  auto_rec: boolean
+  remind: boolean
+  rec_danmu: boolean
+}) {
+  return instance.post<Response<any>>('set_rooms/batch_add_room', data)
+}
 
 export function delRoom(data: AtLeastOne<{ uid: bigint; room_id: number }>) {
   return instance.post<Response<any>>('set_rooms/del_room', data)

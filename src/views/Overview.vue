@@ -62,10 +62,16 @@
     style="min-width: 320px; width: 500px">
     <ElForm label-width="120px" :model="addRoomData">
       <ElFormItem label="UID">
-        <ElInput placeholder="UID和房间号二选一" v-model="addRoomData.uid"></ElInput>
+        <ElInput
+          :disabled="isNotBlank(addRoomData.room_id)"
+          placeholder="支持批量添加，使用英文逗号分隔"
+          v-model="addRoomData.uid"></ElInput>
       </ElFormItem>
       <ElFormItem label="房间号">
-        <ElInput placeholder="UID和房间号二选一" v-model="addRoomData.room_id"></ElInput>
+        <ElInput
+          :disabled="isNotBlank(addRoomData.uid)"
+          placeholder="UID和房间号二选一"
+          v-model="addRoomData.room_id"></ElInput>
       </ElFormItem>
       <ElFormItem label="自动录制"><ElSwitch v-model="addRoomData.auto_rec"></ElSwitch></ElFormItem>
       <ElFormItem label="开播提醒"><ElSwitch v-model="addRoomData.remind"></ElSwitch></ElFormItem>
@@ -81,13 +87,19 @@ import VirtualizedCard from '@/components/VirtualizedCard.vue'
 import OverviewHeader from '@/components/OverviewHeader.vue'
 import Plus from '@/assets/icons/svg/plus-circle-fill.svg'
 import useRoomInfoPageData from '@/hooks/useRoomInfoPageData'
+import type { Combine } from '@/types'
 import { Search } from '@element-plus/icons-vue'
 import { SearchType } from '@/enums'
-import { addRoom } from '@/api/set_room'
+import { addRoom, addRooms } from '@/api/set_room'
 
 const pageData = useRoomInfoPageData()
 const showAddRoom = ref(false)
-const addRoomData = reactive({
+const addRoomData = reactive<
+  Combine<
+    { uid: string; room_id: string },
+    { auto_rec: boolean; remind: boolean; rec_danmu: boolean }
+  >
+>({
   uid: '',
   room_id: '',
   auto_rec: false,
@@ -125,9 +137,46 @@ const filter = (state: SearchType) => {
   pageData.getData(1)
 }
 
+const isNotBlank = (str: string | undefined): boolean => {
+  return str !== '' && str !== undefined
+}
+
 const confirmAddRoom = () => {
+  if (addRoomData.uid && isNotBlank(addRoomData.uid)) {
+    let uidList
+    try {
+      uidList = addRoomData.uid.split(',').map((s) => BigInt(s))
+      if (uidList.length < 0) {
+        ElMessage.error('uid输入不合法 请检查')
+        return
+      }
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        ElMessage.error('uid输入不合法 请检查')
+        return
+      }
+      throw e
+    }
+
+    const data = {
+      uid: uidList,
+      auto_rec: addRoomData.auto_rec,
+      remind: addRoomData.remind,
+      rec_danmu: addRoomData.rec_danmu
+    }
+    addRooms(data)
+      .then(() => {
+        pageData.getData(pageData.currentPage.value)
+        ElMessage.success('添加成功')
+        showAddRoom.value = false
+      })
+      .catch(() => {
+        ElMessage.error('添加失败')
+      })
+    return
+  }
+
   const data = {
-    uid: BigInt(addRoomData.uid),
     room_id: Number(addRoomData.room_id),
     auto_rec: addRoomData.auto_rec,
     remind: addRoomData.remind,
@@ -143,6 +192,7 @@ const confirmAddRoom = () => {
       ElMessage.error('添加失败')
     })
 }
+
 onUnmounted(() => {
   if (pageData.timer !== undefined) {
     clearInterval(pageData.timer)

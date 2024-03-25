@@ -25,14 +25,16 @@
       </ElTooltip>
     </div>
     <div class="action-item">
-      <ElSwitch
-        style="height: 24px"
-        inline-prompt
-        active-text="已开启录制"
-        inactive-text="已关闭录制"
-        v-model="localUserInfo.isAutoRec"
-        :loading="loading"
-        :before-change="beforeChange"></ElSwitch>
+      <ElTooltip content="自动录制" placement="top">
+        <ElSwitch
+          style="height: 24px"
+          inline-prompt
+          active-text="已开启录制"
+          inactive-text="已关闭录制"
+          v-model="localUserInfo.isAutoRec"
+          :loading="loading"
+          :before-change="beforeChange"></ElSwitch>
+      </ElTooltip>
     </div>
     <div class="action-item">
       <ElTooltip content="房间设置" placement="top">
@@ -67,12 +69,37 @@ const props = defineProps({
   }
 })
 const { userInfo } = toRefs(props)
+const canCancelTask = computed(() => {
+  return userInfo.value.appointmentRecord || props.taskStatus.isDownload
+})
 const localUserInfo = ref({ ...userInfo.value })
+const loading = ref(false)
+const iconConfig = [
+  {
+    condition: (userInfo: globalThis.Ref<UserInfo>) => userInfo.value.isAutoRec,
+    getComponent: () => Loading,
+    getContent: () => '自动录制中',
+    getClassName: () => 'rotate-animation icon-disable'
+  },
+  {
+    condition: () => canCancelTask.value,
+    getComponent: () => Stop,
+    getContent: () => '取消录制',
+    getClassName: () => 'text-red'
+  },
+  {
+    // 默认情况
+    condition: () => true,
+    getComponent: () => Start,
+    getContent: () => '开启单次录制',
+    getClassName: () => ''
+  }
+]
+
 watch(userInfo, (newValue) => {
   localUserInfo.value = { ...newValue }
 })
 
-const loading = ref(false)
 const beforeChange = async () => {
   loading.value = true
   const data = {
@@ -93,7 +120,7 @@ const beforeChange = async () => {
 }
 const handleAppointmentRecord = () => {
   if (userInfo.value.isAutoRec) return
-  if (userInfo.value.appointmentRecord) {
+  if (canCancelTask.value) {
     const data = {
       uid: props.userInfo.uid,
       state: false
@@ -133,31 +160,18 @@ const doSplitRecording = () => {
   })
 }
 const getIconComponent = () => {
-  if (userInfo.value.isAutoRec) {
-    return Loading
-  }
-  if (userInfo.value.appointmentRecord) {
-    return Stop
-  }
-  return Start
+  const config = iconConfig.find((c) => c.condition(userInfo))
+  return config ? config.getComponent() : null
 }
+
 const getIconContent = () => {
-  if (userInfo.value.isAutoRec) {
-    return '自动录制中'
-  }
-  if (userInfo.value.appointmentRecord) {
-    return '取消预约录制'
-  }
-  return '预约录制'
+  const config = iconConfig.find((c) => c.condition(userInfo))
+  return config ? config.getContent() : ''
 }
+
 const getIconClassName = () => {
-  if (userInfo.value.isAutoRec) {
-    return 'rotate-animation icon-disable'
-  }
-  if (userInfo.value.appointmentRecord) {
-    return 'text-red'
-  }
-  return ''
+  const config = iconConfig.find((c) => c.condition(userInfo))
+  return config ? config.getClassName() : ''
 }
 </script>
 <style scoped lang="scss">
