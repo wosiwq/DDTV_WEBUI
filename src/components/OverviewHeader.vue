@@ -69,7 +69,7 @@ const props = defineProps({
   },
   refreshTime: {
     type: String,
-    default: new Date().toLocaleString()
+    default: new Date().toLocaleTimeString()
   }
 })
 </script>

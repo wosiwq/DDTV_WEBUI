@@ -7,34 +7,22 @@
           :class="
             taskStatus.isDownload
               ? 'hover:cursor-pointer hover:text-blue'
-              : 'hover:cursor-not-allowed '
+              : 'hover:cursor-not-allowed icon-disable'
           "
-          @click="doSplitRecording(userInfo.uid)">
-          <Cut :color="taskStatus.isDownload ? undefined : '#9CA3AF'"></Cut>
+          @click="doSplitRecording()">
+          <Cut></Cut>
         </ElIcon>
       </ElTooltip>
     </div>
     <div class="action-item">
-      <ElPopconfirm
-        :title="userInfo.appointmentRecord ? '真的要取消预约吗' : '真的要预约录制吗'"
-        @confirm="handleAppointmentRecord">
-        <template #reference>
-          <ElButton
-            size="small"
-            :disabled="userInfo.isAutoRec"
-            :type="
-              userInfo.isAutoRec ? 'success' : userInfo.appointmentRecord ? 'success' : 'info'
-            ">
-            {{
-              userInfo.isAutoRec
-                ? '自动录制中'
-                : userInfo.appointmentRecord
-                  ? '已预约录制'
-                  : '预约录制'
-            }}
-          </ElButton>
-        </template>
-      </ElPopconfirm>
+      <ElTooltip :content="getIconContent()" placement="top">
+        <ElIcon
+          class="hover:cursor-pointer hover:text-blue"
+          :class="getIconClassName()"
+          @click="handleAppointmentRecord">
+          <component :is="getIconComponent()"></component>
+        </ElIcon>
+      </ElTooltip>
     </div>
     <div class="action-item">
       <ElSwitch
@@ -61,6 +49,10 @@ import { createTask, cancelTask, splitRecording } from '@/api/rec_task'
 import useRoomInfoPageData from '@/hooks/useRoomInfoPageData'
 import { Settings } from '@/assets/icons'
 import Cut from '@/assets/icons/svg/cut.svg'
+
+import Loading from '@/assets/icons/svg/loading.svg'
+import Start from '@/assets/icons/svg/start.svg'
+import Stop from '@/assets/icons/svg/stop.svg'
 
 const pageData = useRoomInfoPageData()
 const popover_main = ref<HTMLElement | null>(null)
@@ -100,6 +92,7 @@ const beforeChange = async () => {
   }
 }
 const handleAppointmentRecord = () => {
+  if (userInfo.value.isAutoRec) return
   if (userInfo.value.appointmentRecord) {
     const data = {
       uid: props.userInfo.uid,
@@ -128,15 +121,43 @@ const handleAppointmentRecord = () => {
     }
   }
 }
-const doSplitRecording = (uid: bigint) => {
+const doSplitRecording = () => {
   if (!props.taskStatus.isDownload) return
-  splitRecording({ uid: uid }).then((res) => {
-    if (res.data.code === 200) {
+  splitRecording({ uid: userInfo.value.uid }).then((res) => {
+    if (res.data.code === 0) {
       ElMessage.success('分割完成')
     } else {
       ElMessage.warning(res.data.massage)
+      console.log(res)
     }
   })
+}
+const getIconComponent = () => {
+  if (userInfo.value.isAutoRec) {
+    return Loading
+  }
+  if (userInfo.value.appointmentRecord) {
+    return Stop
+  }
+  return Start
+}
+const getIconContent = () => {
+  if (userInfo.value.isAutoRec) {
+    return '自动录制中'
+  }
+  if (userInfo.value.appointmentRecord) {
+    return '取消预约录制'
+  }
+  return '预约录制'
+}
+const getIconClassName = () => {
+  if (userInfo.value.isAutoRec) {
+    return 'rotate-animation icon-disable'
+  }
+  if (userInfo.value.appointmentRecord) {
+    return 'text-red'
+  }
+  return ''
 }
 </script>
 <style scoped lang="scss">
@@ -145,5 +166,31 @@ const doSplitRecording = (uid: bigint) => {
 }
 .el-button + .el-button {
   margin-left: 0;
+}
+.text-red {
+  --un-text-opacity: 1;
+  color: rgb(248 113 113 / var(--un-text-opacity)) !important;
+}
+.rotate-animation {
+  display: inline-block;
+  animation: rotate-animation 2s linear infinite;
+
+  @keyframes rotate-animation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+.icon-disable {
+  opacity: 0.8;
+  cursor: not-allowed;
+  color: #ccc;
+
+  &:hover {
+    color: #ccc;
+  }
 }
 </style>

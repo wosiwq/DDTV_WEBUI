@@ -2,13 +2,13 @@
   <div class="relative h-[225px] w-400px rd">
     <div
       class="absolute left-0 top-0 z-1 h-[60px] w-full pl-2 pt-1"
-      style="background-image: linear-gradient(0deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.5) 100%)">
+      style="background-image: linear-gradient(0deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.32) 100%)">
       <span class="text-lg">{{ roomInfo.title }}</span>
     </div>
     <div
-      class="absolute bottom-0 left-0 z-1 h-[40px] w-full flex items-end pb-[0.125rem] pl-2"
+      class="absolute bottom-0 left-0 z-1 h-[30px] w-full flex items-end pb-[0.125rem] pl-2"
       style="
-        background-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.5) 100%);
+        background-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.32) 100%);
       ">
       <span>{{ roomInfo.areaName }}</span>
     </div>

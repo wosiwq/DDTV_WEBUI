@@ -9,7 +9,7 @@ const pageSize = ref(12)
 const currentPage = ref(1)
 const currentFilterState = ref<SearchType>(0)
 const searchWord = ref('')
-const lastRefreshTime = ref(new Date().toLocaleString())
+const lastRefreshTime = ref(new Date().toLocaleTimeString())
 let timer: ReturnType<typeof setInterval> | undefined = undefined
 
 const getData = (page: number) => {
@@ -37,7 +37,7 @@ const useRoomInfoPageData = () => {
           type: currentFilterState.value,
           screen_name: searchWord.value
         }).then((res) => {
-          lastRefreshTime.value = new Date().toLocaleString()
+          lastRefreshTime.value = new Date().toLocaleTimeString()
           if (completeInfoList.value === res.data.data.completeInfoList) {
             return
           }
