@@ -37,25 +37,48 @@
       </ElTooltip>
     </div>
     <div class="action-item">
-      <ElTooltip content="房间设置" placement="top">
-        <ElIcon class="hover:cursor-pointer hover:text-blue"><Settings></Settings></ElIcon>
-      </ElTooltip>
+      <ElPopover :effect="isDark ? 'dark' : 'light'" placement="top">
+        <div class="flex flex-col items-center"><span>修改直播间设置</span></div>
+        <div class="flex flex-col items-center">
+          <ElSwitch
+            inline-prompt
+            v-model="forkUserInfo.isAutoRec"
+            active-text="自动录制"
+            inactive-text="自动录制"></ElSwitch>
+          <ElSwitch
+            inline-prompt
+            v-model="forkUserInfo.isRecDanmu"
+            active-text="弹幕录制"
+            inactive-text="弹幕录制"></ElSwitch>
+          <ElSwitch
+            inline-prompt
+            v-model="forkUserInfo.isRemind"
+            active-text="直播提醒"
+            inactive-text="直播提醒"></ElSwitch>
+        </div>
+        <ElButton @click="handelChangeRoomSetting" class="w-full" type="primary">确定</ElButton>
+        <template #reference>
+          <ElIcon class="hover:cursor-pointer hover:text-blue"><Settings></Settings></ElIcon>
+        </template>
+      </ElPopover>
     </div>
     <div ref="popover_main"></div>
   </div>
 </template>
 <script lang="ts" setup>
 import type { UserInfo, TaskStatus } from '@/types/response'
-import { setRoomsRecordState } from '@/api/set_room'
+import { setRoomsRecordState, modifyRoomSettings } from '@/api/set_room'
 import { createTask, cancelTask, splitRecording } from '@/api/rec_task'
 import useRoomInfoPageData from '@/hooks/useRoomInfoPageData'
 import { Settings } from '@/assets/icons'
 import Cut from '@/assets/icons/svg/cut.svg'
+import { useDark } from '@vueuse/core'
 
 import Loading from '@/assets/icons/svg/loading.svg'
 import Start from '@/assets/icons/svg/start.svg'
 import Stop from '@/assets/icons/svg/stop.svg'
 
+const isDark = useDark()
 const pageData = useRoomInfoPageData()
 const popover_main = ref<HTMLElement | null>(null)
 const props = defineProps({
@@ -73,6 +96,7 @@ const canCancelTask = computed(() => {
   return userInfo.value.appointmentRecord || props.taskStatus.isDownload
 })
 const localUserInfo = ref({ ...userInfo.value })
+const forkUserInfo = ref({ ...userInfo.value })
 const loading = ref(false)
 const iconConfig = [
   {
@@ -148,6 +172,22 @@ const handleAppointmentRecord = () => {
     }
   }
 }
+const handelChangeRoomSetting = () => {
+  const data = {
+    uid: userInfo.value.uid,
+    AutoRec: forkUserInfo.value.isAutoRec,
+    Remind: forkUserInfo.value.isRemind,
+    RecDanmu: forkUserInfo.value.isRecDanmu
+  }
+  modifyRoomSettings(data)
+    .then(() => {
+      ElMessage.success('修改成功')
+    })
+    .catch(() => {
+      ElMessage.error('修改失败')
+    })
+}
+
 const doSplitRecording = () => {
   if (!props.taskStatus.isDownload) return
   splitRecording({ uid: userInfo.value.uid }).then((res) => {
