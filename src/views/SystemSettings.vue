@@ -8,25 +8,49 @@
         <ElForm class="max-w-550px">
           <ElFormItem ref="itemEl" label="存放目录">
             <div class="w-full flex justify-between space-x-4">
-              <!-- TODO 接入path设置 -->
-              <ElInput disabled v-model="recordingPath"></ElInput>
-              <ElButton disabled type="primary">应用</ElButton>
+              <ElInput v-model="recordingPath"></ElInput>
+              <ElPopover
+                :visible="recordingPathDialogVisible"
+                @before-enter="handelRecordingPathShow">
+                <template #reference>
+                  <ElButton type="primary" @click="recordingPathDialogVisible = true">
+                    应用
+                  </ElButton>
+                </template>
+                <span>{{ dialogMsg }}</span>
+                <div class="flex justify-between">
+                  <ElButton size="small" @click="recordingPathDialogVisible = false">取消</ElButton>
+                  <ElButton
+                    size="small"
+                    type="primary"
+                    v-if="validateKey !== -1"
+                    @click="handelRecordingPathChangeConfirm">
+                    确定
+                  </ElButton>
+                </div>
+              </ElPopover>
             </div>
           </ElFormItem>
           <ElFormItem label="路径模板">
             <div class="w-full flex justify-between space-x-4">
               <ElInput v-model="fileNameAndPathTemplate"></ElInput>
               <ElPopover
-                width="200px"
-                trigger="click"
+                :visible="fileNameDialogVisible"
                 @before-enter="handelFileNameAndPathTemplateShow">
                 <template #reference>
                   <ElButton type="primary" @click="fileNameDialogVisible = true">应用</ElButton>
                 </template>
                 <span>{{ dialogMsg }}</span>
-                <ElButton type="primary" @click="handelFileNameAndPathTemplateChangeConfirm">
-                  确定
-                </ElButton>
+                <div class="flex justify-between">
+                  <ElButton size="small" @click="fileNameDialogVisible = false">取消</ElButton>
+                  <ElButton
+                    size="small"
+                    type="primary"
+                    v-if="validateKey !== -1"
+                    @click="handelFileNameAndPathTemplateChangeConfirm">
+                    确定
+                  </ElButton>
+                </div>
               </ElPopover>
             </div>
           </ElFormItem>
@@ -72,6 +96,7 @@ const validateKey = ref()
 const recordingPath = ref()
 const fileNameAndPathTemplate = ref()
 const fileNameDialogVisible = ref(false)
+const recordingPathDialogVisible = ref(false)
 const bodyEl = ref()
 const buttonEl = ref()
 const itemEl = ref()
@@ -168,7 +193,36 @@ const handleReloadConfig = () => {
       ElMessage.error('刷新失败，未知错误')
     })
 }
+const handelRecordingPathShow = () => {
+  fileNameDialogVisible.value = false
+  setRecordingPath({ path: recordingPath.value })
+    .then((res) => {
+      validateKey.value = res.data.data
+      dialogMsg.value = `你确定要修改存放目录吗？`
+    })
+    .catch(() => {
+      validateKey.value = -1
+      dialogMsg.value = '存放目录错误，请重新校验'
+    })
+}
+const handelRecordingPathChangeConfirm = () => {
+  setRecordingPath({
+    path: recordingPath.value,
+    check: validateKey.value
+  })
+    .then(() => {
+      ElMessage.success('修改成功')
+    })
+    .catch(() => {
+      ElMessage.error('修改失败，未知错误')
+    })
+    .finally(() => {
+      recordingPathDialogVisible.value = false
+    })
+}
+
 const handelFileNameAndPathTemplateShow = () => {
+  recordingPathDialogVisible.value = false
   setFileNameAndPath({ path_and_format: fileNameAndPathTemplate.value })
     .then((res) => {
       validateKey.value = res.data.data
