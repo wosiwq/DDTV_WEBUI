@@ -10,7 +10,10 @@
           :is-download="i.taskStatus.isDownload"
           :user-info="i.userInfo"
           :room-info="i.roomInfo"></RoomUser>
-        <RoomAction :user-info="i.userInfo" :task-status="i.taskStatus"></RoomAction>
+        <RoomAction
+          :user-info="i.userInfo"
+          :task-status="i.taskStatus"
+          :is-dark="isDark"></RoomAction>
       </div>
     </div>
   </div>
@@ -20,6 +23,9 @@ import type { CompleteInfo } from '@/types/response'
 import RoomUser from '@/components/Room/RoomUser.vue'
 import RoomAction from '@/components/Room/RoomAction.vue'
 import RoomCover from '@/components/Room/RoomCover.vue'
+import { useDark } from '@vueuse/core'
+
+const isDark = true
 
 defineProps({
   roomInfoList: {

@@ -72,13 +72,11 @@ import { createTask, cancelTask, splitRecording } from '@/api/rec_task'
 import useRoomInfoPageData from '@/hooks/useRoomInfoPageData'
 import { Settings } from '@/assets/icons'
 import Cut from '@/assets/icons/svg/cut.svg'
-import { useDark } from '@vueuse/core'
 
 import Loading from '@/assets/icons/svg/loading.svg'
 import Start from '@/assets/icons/svg/start.svg'
 import Stop from '@/assets/icons/svg/stop.svg'
 
-const isDark = useDark()
 const pageData = useRoomInfoPageData()
 const popover_main = ref<HTMLElement | undefined>(undefined)
 const props = defineProps({
@@ -89,6 +87,10 @@ const props = defineProps({
   taskStatus: {
     type: Object as PropType<TaskStatus>,
     default: () => ({})
+  },
+  isDark: {
+    type: Boolean,
+    default: false
   }
 })
 const { userInfo } = toRefs(props)

@@ -15,7 +15,7 @@
     "@types/crypto-js": "^4.2.1",
     "@videojs-player/vue": "^1.0.0",
     "@vueuse/components": "^10.7.2",
-    "@vueuse/core": "^10.6.1",
+    "@vueuse/core": "^10.9.0",
     "axios": "^1.6.2",
     "crypto-js": "^4.2.0",
     "element-plus": "^2.6.1",

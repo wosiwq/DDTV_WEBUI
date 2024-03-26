@@ -1,11 +1,12 @@
 import { getDetailedRoomInfoList } from '@/api/get_room'
+import { useLocalStorage } from '@vueuse/core'
 import type { CompleteInfo } from '@/types/response'
 import type { SearchType } from '@/enums/search_type'
 
 const completeInfoList = ref<CompleteInfo[]>()
 const total = ref(0)
 const isLoading = ref(true)
-const pageSize = ref(12)
+const pageSize = useLocalStorage('pageSize', 12)
 const currentPage = ref(1)
 const currentFilterState = ref<SearchType>(0)
 const searchWord = ref('')
