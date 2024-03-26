@@ -20,7 +20,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { setRoomsRecordState } from '@/api/set_room'
 import type { CompleteInfo } from '@/types/response'
 import { SearchType } from '@/enums'
 import { useWindowSize } from '@vueuse/core'

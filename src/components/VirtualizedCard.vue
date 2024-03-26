@@ -25,7 +25,7 @@ import RoomAction from '@/components/Room/RoomAction.vue'
 import RoomCover from '@/components/Room/RoomCover.vue'
 import { useDark } from '@vueuse/core'
 
-const isDark = true
+const isDark = useDark()
 
 defineProps({
   roomInfoList: {
