@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO 手机适配 白天模式 -->
   <ElConfigProvider :locale="locale">
     <RouterView />
   </ElConfigProvider>

@@ -2,7 +2,7 @@
   <ElMenu router class="el-menu-vertical-demo" :collapse="isCollapse" :collapse-transition="true">
     <ElMenuItem @click="openGithub">
       <el-icon>
-        <ElImage fit="contain" src="/DDTV.png" alt="DDTV logo" />
+        <ElImage fit="contain" src="/DDTV.webp" alt="DDTV logo" />
       </el-icon>
       <template #title>
         <span :class="isCollapse ? '' : 'side-name'">DDTV-WEBUI</span>

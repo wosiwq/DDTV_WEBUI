@@ -13,7 +13,7 @@
       <span>{{ roomInfo.areaName }}</span>
     </div>
     <ElImage :src="getCoverImage()">
-      <template #error><img src="/error.png" /></template>
+      <template #error><img src="/error.webp" /></template>
     </ElImage>
   </div>
 </template>
@@ -31,7 +31,7 @@ const getCoverImage = () => {
   } else if (props.roomInfo.keyFrame) {
     return props.roomInfo.keyFrame + '@400w_225h_1c_1s.webp'
   }
-  return '/error.png'
+  return '/error.webp'
 }
 </script>
 <style scoped lang="scss"></style>
