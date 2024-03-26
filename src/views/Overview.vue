@@ -83,7 +83,6 @@
   </ElDialog>
 </template>
 <script lang="ts" setup>
-import VirtualizedCard from '@/components/VirtualizedCard.vue'
 import OverviewHeader from '@/components/OverviewHeader.vue'
 import Plus from '@/assets/icons/svg/plus-circle-fill.svg'
 import useRoomInfoPageData from '@/hooks/useRoomInfoPageData'
@@ -91,6 +90,8 @@ import type { Combine } from '@/types'
 import { Search } from '@element-plus/icons-vue'
 import { SearchType } from '@/enums'
 import { addRoom, addRooms } from '@/api/set_room'
+
+const VirtualizedCard = defineAsyncComponent(() => import('@/components/VirtualizedCard.vue'))
 
 const pageData = useRoomInfoPageData()
 const showAddRoom = ref(false)

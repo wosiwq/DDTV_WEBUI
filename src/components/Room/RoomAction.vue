@@ -36,6 +36,7 @@
           :before-change="beforeChange"></ElSwitch>
       </ElTooltip>
     </div>
+    <!-- FIXME Popover造成性能问题 -->
     <div class="action-item">
       <ElPopover :append-to="popover_main" :effect="isDark ? 'dark' : 'light'" placement="top">
         <div class="flex flex-col items-center"><span>修改直播间设置</span></div>

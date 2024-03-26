@@ -27,7 +27,8 @@
             key-field="uid"
             v-slot="{ item }"
             :style="{
-              height: tableDivSize.height.value - headerDivSize.height.value - 10 + 'px'
+              height: tableDivSize.height.value - headerDivSize.height.value - 10 + 'px',
+              willChange: 'scroll-position'
             }">
             <div class="min-w-[500px] flex items-center border-t-1 pl-2 pr-1 dark:border-[#414243]">
               <ElCheckbox
@@ -36,6 +37,7 @@
                 @change="(checked) => handleCheckboxChange(item, checked)"></ElCheckbox>
               <RoomUser
                 class="w-full"
+                :key="item.uid"
                 :room-info="item.roomInfo"
                 :user-info="item.userInfo"
                 :is-download="item.taskStatus.isDownload">
@@ -62,7 +64,9 @@
                 key-field="uid"
                 v-slot="{ item }"
                 :style="{
-                  height: (tableDivSize.height.value - headerDivSize.height.value - 10) / 1.1 + 'px'
+                  height:
+                    (tableDivSize.height.value - headerDivSize.height.value - 10) / 1.1 + 'px',
+                  willChange: 'scroll-position'
                 }">
                 <div
                   class="min-w-[500px] flex items-center border-t-1 pl-2 pr-1 dark:border-[#414243]">

@@ -3,7 +3,7 @@ import { useLocalStorage } from '@vueuse/core'
 import type { CompleteInfo } from '@/types/response'
 import type { SearchType } from '@/enums/search_type'
 
-const completeInfoList = ref<CompleteInfo[]>()
+const completeInfoList = ref<CompleteInfo[]>([])
 const total = ref(0)
 const isLoading = ref(true)
 const pageSize = useLocalStorage('pageSize', 12)
