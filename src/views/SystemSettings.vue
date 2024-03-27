@@ -9,49 +9,25 @@
           <ElFormItem ref="itemEl" label="存放目录">
             <div class="w-full flex justify-between space-x-4">
               <ElInput v-model="recordingPath"></ElInput>
-              <ElPopover
-                :visible="recordingPathDialogVisible"
-                @before-enter="handelRecordingPathShow">
-                <template #reference>
-                  <ElButton type="primary" @click="recordingPathDialogVisible = true">
-                    应用
-                  </ElButton>
-                </template>
-                <span>{{ dialogMsg }}</span>
-                <div class="flex justify-between">
-                  <ElButton size="small" @click="recordingPathDialogVisible = false">取消</ElButton>
-                  <ElButton
-                    size="small"
-                    type="primary"
-                    v-if="validateKey !== -1"
-                    @click="handelRecordingPathChangeConfirm">
-                    确定
-                  </ElButton>
-                </div>
-              </ElPopover>
+              <SystemSettingsConfirmButton
+                v-model="recordingPathDialogVisible"
+                :validate-key="validateKey"
+                :popover-msg="dialogMsg"
+                :before-enter-function="handelRecordingPathShow"
+                :confirm-callback="handelRecordingPathChangeConfirm"></SystemSettingsConfirmButton>
             </div>
           </ElFormItem>
           <ElFormItem label="路径模板">
             <div class="w-full flex justify-between space-x-4">
               <ElInput v-model="fileNameAndPathTemplate"></ElInput>
-              <ElPopover
-                :visible="fileNameDialogVisible"
-                @before-enter="handelFileNameAndPathTemplateShow">
-                <template #reference>
-                  <ElButton type="primary" @click="fileNameDialogVisible = true">应用</ElButton>
-                </template>
-                <span>{{ dialogMsg }}</span>
-                <div class="flex justify-between">
-                  <ElButton size="small" @click="fileNameDialogVisible = false">取消</ElButton>
-                  <ElButton
-                    size="small"
-                    type="primary"
-                    v-if="validateKey !== -1"
-                    @click="handelFileNameAndPathTemplateChangeConfirm">
-                    确定
-                  </ElButton>
-                </div>
-              </ElPopover>
+              <SystemSettingsConfirmButton
+                v-model="fileNameDialogVisible"
+                :validate-key="validateKey"
+                :popover-msg="dialogMsg"
+                :before-enter-function="handelFileNameAndPathTemplateShow"
+                :confirm-callback="
+                  handelFileNameAndPathTemplateChangeConfirm
+                "></SystemSettingsConfirmButton>
             </div>
           </ElFormItem>
           <ElCollapse class="max-w-550px">
@@ -86,6 +62,7 @@ import {
   setRecordingPath,
   reloadConfig
 } from '@/api/config'
+import SystemSettingsConfirmButton from '@/components/SystemSettingsConfirmButton.vue'
 
 const router = useRouter()
 

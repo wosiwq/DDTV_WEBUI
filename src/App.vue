@@ -1,5 +1,5 @@
 <template>
-  <!-- TODO 手机适配 白天模式 -->
+  <!-- TODO 手机适配 白天模式 初次登陆同意用户协议 -->
   <ElConfigProvider :locale="locale">
     <RouterView />
   </ElConfigProvider>
